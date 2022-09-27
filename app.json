@@ -14,9 +14,7 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
     },
@@ -28,6 +26,13 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "MAP_BOX_API_KEY": "xxx",
+      "MAP_BOX_API_SECRET": "yyy",
+      "eas": {
+        "projectId xx": "e7d4f43c-394a-4cf6-8f42-5369f011921f"
+      }
     }
   }
 }

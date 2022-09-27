@@ -6,7 +6,7 @@
     "dev": "expo start",
     "android": "expo start --android --port 19001",
     "ios": "expo start --ios --port 19000",
-    "web": "expo start --web",
+    "web": "expo start --web --port 19002",
     "gen": "graphql-codegen --config codegen.yml",
     "build": "expo build:ios ",
     "build:ios": "eas build --platform ios",
@@ -15,11 +15,15 @@
     "submit:android": "eas submit -p android --latest"
   },
   "dependencies": {
+    "@expo/webpack-config": "^0.17.0",
+    "@react-navigation/native": "^6.0.13",
     "expo": "~46.0.13",
     "expo-status-bar": "~1.4.0",
     "react": "18.0.0",
     "react-dom": "18.0.0",
     "react-native": "0.69.5",
+    "react-native-safe-area-context": "4.3.1",
+    "react-native-screens": "~3.15.0",
     "react-native-web": "~0.18.7"
   },
   "devDependencies": {
