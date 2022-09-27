@@ -3,6 +3,8 @@ import MapView, { Marker } from "react-native-maps";
 import React, { useState } from "react";
 import tw from "../../lib/tailwind";
 import black_pin from "../../../assets/pins/black_pin.png";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
 
 interface Region {
   latitude: number;
@@ -59,6 +61,10 @@ const initialMarkers: Pin[] = [
 const Map = () => {
   const [region, setRegion] = useState<Region>(initialRegion);
   const [markers, setMarkers] = useState<Pin[]>(initialMarkers);
+
+  const shops = useSelector((state: RootState) => state.shops);
+
+  console.log("shops", shops);
 
   const onRegionChange = (region: Region) => {
     setRegion(region);

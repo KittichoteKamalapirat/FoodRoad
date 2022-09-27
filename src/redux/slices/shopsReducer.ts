@@ -5,7 +5,14 @@ export interface Shop {
   imgUrl: string;
 }
 
-const initialState: Shop[] = [];
+const initialState: Shop[] = [
+  {
+    id: "1",
+    name: "โรตี",
+    imgUrl: "www.xxx.com",
+  },
+  { id: "2", name: "อะโวคาโด", imgUrl: "asdf" },
+];
 
 export const shopsSlice = createSlice({
   name: "shops",
