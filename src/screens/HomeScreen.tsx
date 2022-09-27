@@ -1,10 +1,9 @@
 import React from "react";
-import { View, Text } from "react-native";
+import { Text, View } from "react-native";
 import { NavigationScreenProp } from "react-navigation";
 import { Container } from "../components/containers/Container";
 import ScreenLayout from "../components/layouts/ScreenLayout";
-import MyText from "../components/MyTexts/MyText";
-
+import Map from "../components/Map";
 import tw from "../lib/tailwind";
 
 interface Props {
@@ -16,11 +15,14 @@ const HomeScreen = ({ navigation }: Props) => {
 
   return (
     <ScreenLayout>
-      <Container>
-        <View style={tw`h-full`}>
-          <MyText>This is home screen</MyText>
+      <View style={tw`h-screen`}>
+        <View style={tw`h-1/2`}>
+          <Map />
         </View>
-      </Container>
+        <View style={tw`h-1/2`}>
+          <Text>buttom</Text>
+        </View>
+      </View>
     </ScreenLayout>
   );
 };
