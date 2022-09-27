@@ -1,20 +1,39 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import {
+  createNavigationContainerRef,
+  NavigationContainer,
+} from "@react-navigation/native";
+import { StatusBar } from "expo-status-bar";
+import { useState } from "react";
+import { StyleSheet, Text, View } from "react-native";
+import TabNavigator from "./src/navigations/TabNavigator";
 
-export default function App() {
+const App = () => {
+  const [routeName, setRouteName] = useState("");
+  const ref = createNavigationContainerRef();
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
+    <NavigationContainer
+      ref={ref}
+      onReady={() => {
+        setRouteName((ref as any).getCurrentRoute().name); // TODO
+      }}
+      onStateChange={async () => {
+        const currentRouteName = (ref as any).getCurrentRoute().name;
+        setRouteName(currentRouteName);
+      }}
+    >
+      <TabNavigator routeName={routeName} />
       <StatusBar style="auto" />
-    </View>
+    </NavigationContainer>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
+
+export default App;
