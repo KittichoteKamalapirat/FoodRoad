@@ -6,6 +6,10 @@ import { bgColor, grey0 } from "../../theme";
 import { ButtonTypes } from "../components/Buttons/Button";
 import IconButton from "../components/Buttons/IconButton";
 import HomeScreen from "../screens/HomeScreen";
+import LoginScreen from "../screens/LoginScreen";
+import RegisterScreen from "../screens/RegisterScreen";
+import SettingScreen from "../screens/SettingScreen";
+import ShopScreen from "../screens/ShopScreen";
 
 const HomeStack = createNativeStackNavigator();
 
@@ -15,7 +19,6 @@ const HomeStackScreen = () => {
   return (
     <HomeStack.Navigator
       screenOptions={{
-        // headerShown: false,
         headerTintColor: grey0,
         headerTitleAlign: "left", // todo not working
         headerStyle: { backgroundColor: bgColor },
@@ -38,6 +41,42 @@ const HomeStackScreen = () => {
           ),
         }}
       />
+
+      <HomeStack.Screen
+        name="Shop"
+        component={ShopScreen}
+        options={({ route }) => ({
+          title: route.params?.name,
+        })}
+      />
+
+      <HomeStack.Screen
+        name="Login"
+        component={LoginScreen}
+        options={() => ({
+          headerLeft: () => (
+            <IconButton
+              onPress={() => navigation.navigate("Setting")}
+              icon={<Ionicons name="chevron-back" size={24} color={grey0} />}
+              type={ButtonTypes.TEXT}
+            />
+          ),
+        })}
+      />
+      <HomeStack.Screen
+        name="Register"
+        component={RegisterScreen}
+        options={() => ({
+          headerLeft: () => (
+            <IconButton
+              onPress={() => navigation.navigate("Setting")}
+              icon={<Ionicons name="chevron-back" size={24} color={grey0} />}
+              type={ButtonTypes.TEXT}
+            />
+          ),
+        })}
+      />
+      <HomeStack.Screen name="Setting" component={SettingScreen} />
     </HomeStack.Navigator>
   );
 };

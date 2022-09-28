@@ -5,20 +5,13 @@ import tw from "../../lib/tailwind";
 import black_pin from "../../../assets/pins/black_pin.png";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
+import { useNavigation } from "@react-navigation/native";
 
 interface Region {
   latitude: number;
   longitude: number;
   latitudeDelta: number;
   longitudeDelta: number;
-}
-
-interface Pin {
-  latitude: number;
-  longitude: number;
-  title: string;
-  description: string;
-  img: string;
 }
 
 const initialRegion: Region = {
@@ -28,39 +21,10 @@ const initialRegion: Region = {
   longitudeDelta: 0.0421,
 };
 
-const initialMarkers: Pin[] = [
-  {
-    latitude: 37.78825,
-    longitude: -122.4324,
-    title: "title 1",
-    description: "descro",
-    img: "../../../assets/pins/black_pin",
-  },
-  {
-    latitude: 37.78825 + 0.1,
-    longitude: -122.4324,
-    title: "title 2",
-    description: "deecrition 2",
-    img: black_pin,
-  },
-  {
-    latitude: 37.78825 + 0.01,
-    longitude: -122.4324,
-    title: "title 2",
-    description: "deecrition 2",
-    img: "/assets/pins/black_pin.png",
-  },
-  {
-    latitude: 37.78825 + 0.001,
-    longitude: -122.4324,
-    title: "title 2",
-    description: "deecrition 2",
-    img: "../../assets/pins/black_pin.png",
-  },
-];
 const Map = () => {
   const [region, setRegion] = useState<Region>(initialRegion);
-  const [markers, setMarkers] = useState<Pin[]>(initialMarkers);
+
+  const navigation = useNavigation();
 
   const shops = useSelector((state: RootState) => state.shops);
 
@@ -78,15 +42,24 @@ const Map = () => {
         onRegionChange={onRegionChange}
         mapType="mutedStandard"
       >
-        {markers.map((marker, index) => (
+        {shops.map((shop, index) => (
           <Marker
             key={index}
             coordinate={{
-              latitude: marker.latitude,
-              longitude: marker.longitude,
+              latitude: shop.curLat,
+              longitude: shop.curLng,
             }}
-            title={marker.title}
-            description={marker.description}
+            title={shop.title}
+            description={shop.description}
+            onPress={() => {
+              console.log("press");
+              navigation.navigate(
+                "Shop" as never,
+                {
+                  shopId: shop.id,
+                } as never
+              );
+            }}
             // image={{ uri: "./assets/pins/black_pin" }}
           />
         ))}

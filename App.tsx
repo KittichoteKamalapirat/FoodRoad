@@ -4,7 +4,7 @@ import {
 } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet } from "react-native";
 import { Provider } from "react-redux";
 import TabNavigator from "./src/navigations/TabNavigator";
 import store from "./src/redux/store";
