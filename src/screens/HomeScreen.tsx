@@ -4,6 +4,7 @@ import { NavigationScreenProp } from "react-navigation";
 import { Container } from "../components/containers/Container";
 import ScreenLayout from "../components/layouts/ScreenLayout";
 import Map from "../components/Map";
+import { auth } from "../firebase/client";
 import tw from "../lib/tailwind";
 
 interface Props {
@@ -11,6 +12,9 @@ interface Props {
 }
 
 const HomeScreen = ({ navigation }: Props) => {
+  const user = auth.currentUser?.phoneNumber;
+
+  console.log("user", user);
   console.log("home screen, BoxesScreen");
 
   return (

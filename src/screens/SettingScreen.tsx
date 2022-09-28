@@ -5,6 +5,7 @@ import { NavigationScreenProp } from "react-navigation";
 import Button, { ButtonTypes } from "../components/Buttons/Button";
 import { Container } from "../components/containers/Container";
 import ScreenLayout from "../components/layouts/ScreenLayout";
+import { auth } from "../firebase/client";
 import tw from "../lib/tailwind";
 
 interface Props {
@@ -16,7 +17,7 @@ const Tab = createBottomTabNavigator();
 const SettingScreen = ({ navigation }: Props) => {
   console.log("setting screen");
 
-  const currentUser = null;
+  const currentUser = auth.currentUser;
   const createTwoButtonAlert = () =>
     Alert.alert("Are you sure?", "This action cannot be undone", [
       {
@@ -39,6 +40,7 @@ const SettingScreen = ({ navigation }: Props) => {
 
   const handleLogout = async () => {
     try {
+      await auth.signOut().then(() => navigation.navigate("Home"));
     } catch (error) {
       console.log("error logging out");
     }

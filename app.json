@@ -27,9 +27,18 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
+    "packagerOpts": {
+      "sourceExts": ["cjs", "idb"]
+    },
     "extra": {
       "eas": {
-        "projectId xx": "e7d4f43c-394a-4cf6-8f42-5369f011921f"
+        "FIREBASE_API_KEY": "AIzaSyBrPMXdAw92A_vzV1VJ37iDDg4oTy1I4RI",
+        "FIREBASE_AUTH_DOMAIN": "foodroad-d75fa.firebaseapp.com",
+        "FIREBASE_PROJECT_ID": "foodroad-d75fa",
+        "FIREBASE_STORAGE_BUCKET": "foodroad-d75fa.appspot.com",
+        "FIREBASE_MESSAGING_SENDER_ID": "159547225170",
+        "FIREBASE_APP_ID": "1:159547225170:web:ff340b40419fc744e41b8b",
+        "FIREBASE_MEASUREMENT_ID": "G-W8264TE30X"
       }
     }
   }
