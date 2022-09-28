@@ -8,23 +8,17 @@ import {
 } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import React, { useRef, useState } from "react";
-import { useEffect } from "react";
 import { Text, TextInput, View } from "react-native";
 import { NavigationScreenProp } from "react-navigation";
+import { useDispatch } from "react-redux";
 import { grey100 } from "../../theme";
 import Button, { ButtonTypes } from "../components/Buttons/Button";
 import ScreenLayout from "../components/layouts/ScreenLayout";
 import MyText from "../components/MyTexts/MyText";
-import {
-  app,
-  auth,
-  confirmSmsCode,
-  firestore,
-  sendSmsVerification,
-} from "../firebase/client";
-import { firebaseConfig } from "../firebase/config";
+import { app, auth, firestore } from "../firebase/client";
 import useAuth from "../hooks/useAuth";
 import tw from "../lib/tailwind";
+import { Pin, updateUsers } from "../redux/slices/usersReducer";
 import { formatphoneNumber } from "../utils/formatPhoneNumber";
 
 interface Props {
@@ -33,6 +27,7 @@ interface Props {
 
 const RegisterScreen = ({ navigation }: Props) => {
   useAuth();
+  const dispatch = useDispatch();
   const [phoneNumber, setPhoneNumber] = useState("");
   const [code, setCode] = useState("");
   const [verificationId, setVerificationId] = useState("");
@@ -72,13 +67,17 @@ const RegisterScreen = ({ navigation }: Props) => {
       const newUser = {
         uid,
         phoneNumber,
+        latitude: 0,
+        longitude: 0,
       };
 
-      console.log("newUser", newUser);
-
       const userRef = doc(firestore, "users", uid);
-      console.log("userRef", userRef);
       await setDoc(userRef, newUser);
+
+      // const pinDocRef = doc(userRef, "pin", "pin_uid");
+
+      // const initialPin: Pin = { latitude: 0, longitude: 0 };
+      // await setDoc(pinDocRef, initialPin);
 
       setMessage({
         text: "Phone authentication successful 👍",

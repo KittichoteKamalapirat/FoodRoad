@@ -119,10 +119,10 @@ export const fetchSubscription = async (uid: string) => {
 //   }
 // };
 
-export const confirmSmsCode = (verificationId: string, code: string) => {
-  const credential = PhoneAuthProvider.credential(verificationId, code);
-  signInWithCredential(auth, credential).then((result) => {
-    // Do something with the results here
-    console.log(result);
-  });
-};
+// export const confirmSmsCode = (verificationId: string, code: string) => {
+//   const credential = PhoneAuthProvider.credential(verificationId, code);
+//   signInWithCredential(auth, credential).then((result) => {
+//     // Do something with the results here
+//     console.log(result);
+//   });
+// };

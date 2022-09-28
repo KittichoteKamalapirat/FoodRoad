@@ -1,7 +1,6 @@
 import React from "react";
 import { Text, View } from "react-native";
 import { NavigationScreenProp } from "react-navigation";
-import { Container } from "../components/containers/Container";
 import ScreenLayout from "../components/layouts/ScreenLayout";
 import Map from "../components/Map";
 import { auth } from "../firebase/client";
