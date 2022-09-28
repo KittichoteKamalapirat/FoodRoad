@@ -33,6 +33,8 @@ const SettingScreen = ({ navigation }: Props) => {
 
   const handleDeleteUser = async () => {
     try {
+      alert("User successfully delete");
+      await auth.currentUser?.delete().then(() => navigation.navigate("Home"));
     } catch (error) {
       console.log("error deleting user", error);
     }
