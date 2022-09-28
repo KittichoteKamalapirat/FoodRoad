@@ -6,6 +6,7 @@ import {
   PhoneAuthProvider,
   signInWithCredential,
 } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
 import React, { useRef, useState } from "react";
 import { useEffect } from "react";
 import { Text, TextInput, View } from "react-native";
@@ -18,6 +19,7 @@ import {
   app,
   auth,
   confirmSmsCode,
+  firestore,
   sendSmsVerification,
 } from "../firebase/client";
 import { firebaseConfig } from "../firebase/config";
@@ -66,7 +68,17 @@ const RegisterScreen = ({ navigation }: Props) => {
     try {
       const result = await signInWithCredential(auth, credential);
 
-      console.log("result");
+      const { uid, phoneNumber } = result.user;
+      const newUser = {
+        uid,
+        phoneNumber,
+      };
+
+      console.log("newUser", newUser);
+
+      const userRef = doc(firestore, "users", uid);
+      console.log("userRef", userRef);
+      await setDoc(userRef, newUser);
 
       setMessage({
         text: "Phone authentication successful 👍",

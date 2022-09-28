@@ -1,11 +1,12 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { deleteDoc, doc, updateDoc } from "firebase/firestore";
 import React from "react";
 import { Alert, Image, View } from "react-native";
 import { NavigationScreenProp } from "react-navigation";
 import Button, { ButtonTypes } from "../components/Buttons/Button";
 import { Container } from "../components/containers/Container";
 import ScreenLayout from "../components/layouts/ScreenLayout";
-import { auth } from "../firebase/client";
+import { auth, firestore } from "../firebase/client";
 import tw from "../lib/tailwind";
 
 interface Props {
@@ -33,10 +34,17 @@ const SettingScreen = ({ navigation }: Props) => {
 
   const handleDeleteUser = async () => {
     try {
-      alert("User successfully delete");
-      await auth.currentUser?.delete().then(() => navigation.navigate("Home"));
+      if (!auth.currentUser) return;
+
+      const userRef = doc(firestore, "users", auth.currentUser.uid);
+      deleteDoc(userRef).then(() => {
+        auth.currentUser?.delete().then(() => {
+          navigation.navigate("Home");
+          alert("User successfully delete");
+        });
+      });
     } catch (error) {
-      console.log("error deleting user", error);
+      console.log("error deleting the user", error);
     }
   };
 
