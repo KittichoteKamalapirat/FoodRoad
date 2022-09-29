@@ -4,15 +4,14 @@ import {
   getCurrentPositionAsync,
   requestForegroundPermissionsAsync,
 } from "expo-location";
-import { addDoc, collection } from "firebase/firestore";
+import { collection } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import MapView, { Marker } from "react-native-maps";
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { auth, firestore } from "../../firebase/client";
 import tw from "../../lib/tailwind";
-import { Pin, updateUsers } from "../../redux/slices/usersReducer";
+import { updateUsers } from "../../redux/slices/usersReducer";
 import { RootState } from "../../redux/store";
 import MyText from "../MyTexts/MyText";
 
@@ -23,6 +22,12 @@ interface Region {
   longitudeDelta: number;
 }
 
+interface Pin {
+  latitude: number;
+  longitude: number;
+}
+
+const POLL_INTERVAL = 5000;
 const MY_HOUSE_LATITUDE = 13.8732940339;
 const MY_HOUSE_LONGITUDE = 13.8732940339;
 const CALIFORNIA_LATITUDE = 37.4214938;
@@ -64,6 +69,15 @@ const Map = () => {
     text = JSON.stringify(region);
   }
 
+  const getMyLocation = async () => {
+    const location = await getCurrentPositionAsync();
+
+    const { latitude, longitude } = location.coords;
+    const myPin = { latitude, longitude };
+    return myPin;
+  };
+
+  // request permission
   useEffect(() => {
     (async () => {
       try {
@@ -78,54 +92,81 @@ const Map = () => {
     })();
   }, [requestForegroundPermissionsAsync]);
 
-  // find  current position
-  useEffect(() => {
-    (async () => {
-      try {
-        console.log("find current position");
+  // find  current position and update to firestore
+  // useEffect(() => {
+  //   (async () => {
+  //     try {
+  //       const myPin = await getMyLocation();
+  //       setPin(myPin);
 
-        const location = await getCurrentPositionAsync();
-
-        const { latitude, longitude } = location.coords;
-        console.log("my lat", latitude);
-        console.log("my lng", longitude);
-        setPin({
-          latitude,
-          longitude,
-        });
-      } catch (error) {
-        console.log("error", error.message);
-      }
-    })();
-  }, [region.latitude, region.longitude]);
+  //       // update to firestore
+  //       const userDocRef = doc(
+  //         firestore,
+  //         "users",
+  //         auth.currentUser?.uid as string
+  //       );
+  //       await setDoc(userDocRef, pin, { merge: true });
+  //     } catch (error) {
+  //       console.log("error", error.message);
+  //     }
+  //   })();
+  // }, [auth.currentUser, region.latitude, region.longitude]);
 
   // update current location for the curent user
+  // useEffect(() => {
+  //   (async () => {
+  //     try {
+  //       // create current location in user in firebases
+  //       console.log("set current location");
+  //       const userDocRef = doc(
+  //         firestore,
+  //         "users",
+  //         auth.currentUser?.uid as string
+  //       );
+
+  //       // const pinDocRef = doc(userDocRef, "pin", "pin_uid");
+  //       // const pinColRef = collection(userDocRef, "pin", );
+
+  //       // await setDoc(pinDocRef, pin);
+
+  //       await setDoc(userDocRef, pin, { merge: true });
+  //     } catch (error) {
+  //       console.log("error", error.message);
+  //     }
+  //   })();
+  // }, [auth.currentUser, pin]);
+
+  console.log(
+    "another legnth",
+    users.filter((user) => user.uid !== auth.currentUser?.uid).length
+  );
+
+  console.log("current", pin.latitude, pin.longitude);
+
+  // get and set live location
   useEffect(() => {
-    (async () => {
+    const interval = setInterval(async () => {
       try {
-        // create current location in user in firebases
-        console.log("set current location");
+        const myPin = await getMyLocation();
+        setPin(myPin);
+
+        // update to firestore
         const userDocRef = doc(
           firestore,
           "users",
           auth.currentUser?.uid as string
         );
-
-        // const pinDocRef = doc(userDocRef, "pin", "pin_uid");
-        // const pinColRef = collection(userDocRef, "pin", );
-
-        // await setDoc(pinDocRef, pin);
-
         await setDoc(userDocRef, pin, { merge: true });
       } catch (error) {
         console.log("error", error.message);
       }
-    })();
-  }, [auth.currentUser, pin]);
+    }, POLL_INTERVAL);
 
-  // get users realtime and put in redux store
+    return () => clearInterval(interval);
+  }, [auth.currentUser, region.latitude, region.longitude]);
+
+  // listen to data change in firestore
   useEffect(() => {
-    console.log("+++++++++++++++++update userss+++++++++++++++++");
     if (auth.currentUser) {
       const colRef = collection(firestore, "users");
 
@@ -200,7 +241,24 @@ const Map = () => {
       <View style={tw`pt-10`}>
         <MyText>hi</MyText>
         <MyText>hi</MyText>
-        <MyText>hi</MyText>
+        <MyText>user num: {users.length}</MyText>
+        <MyText>
+          another user:
+          {
+            users.filter((user) => user.uid !== auth.currentUser?.uid)[0]
+              ?.latitude
+          }
+          {
+            users.filter((user) => user.uid !== auth.currentUser?.uid)[0]
+              ?.longitude
+          }
+        </MyText>
+
+        <MyText>
+          current user: {pin.latitude}
+          {pin.longitude}
+        </MyText>
+
         <MyText>lat: {pin.latitude}</MyText>
         <MyText>lng: {pin.longitude}</MyText>
       </View>

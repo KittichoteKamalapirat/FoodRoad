@@ -19,10 +19,10 @@ const HomeScreen = ({ navigation }: Props) => {
   return (
     <ScreenLayout>
       <View style={tw`h-screen`}>
-        <View style={tw`h-3/5`}>
+        <View style={tw`h-4/5`}>
           <Map />
         </View>
-        <View style={tw`h-2/5`}>
+        <View style={tw`h-1/5`}>
           <Text>buttom</Text>
         </View>
       </View>
