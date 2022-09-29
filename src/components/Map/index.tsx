@@ -7,25 +7,14 @@ import {
 import { collection } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
-import MapView, { Marker } from "react-native-maps";
+import MapView, { Marker, Region } from "react-native-maps";
 import { useDispatch, useSelector } from "react-redux";
 import { auth, firestore } from "../../firebase/client";
 import tw from "../../lib/tailwind";
 import { updateUsers } from "../../redux/slices/usersReducer";
 import { RootState } from "../../redux/store";
+import { Pin } from "../../types/Pin";
 import MyText from "../MyTexts/MyText";
-
-interface Region {
-  latitude: number;
-  longitude: number;
-  latitudeDelta: number;
-  longitudeDelta: number;
-}
-
-interface Pin {
-  latitude: number;
-  longitude: number;
-}
 
 const POLL_INTERVAL = 5000;
 const MY_HOUSE_LATITUDE = 13.8732940339;
@@ -54,8 +43,6 @@ const Map = () => {
   const [errorMsg, setErrorMsg] = useState("");
   const [region, setRegion] = useState<Region>(initialRegion);
   const users = useSelector((state: RootState) => state.users);
-
-  console.log("--------------users--------------", users);
 
   const onRegionChange = (region: Region) => {
     setRegion(region);
@@ -136,13 +123,6 @@ const Map = () => {
   //   })();
   // }, [auth.currentUser, pin]);
 
-  console.log(
-    "another legnth",
-    users.filter((user) => user.uid !== auth.currentUser?.uid).length
-  );
-
-  console.log("current", pin.latitude, pin.longitude);
-
   // get and set live location
   useEffect(() => {
     const interval = setInterval(async () => {
@@ -156,7 +136,7 @@ const Map = () => {
           "users",
           auth.currentUser?.uid as string
         );
-        await setDoc(userDocRef, pin, { merge: true });
+        await setDoc(userDocRef, { pin }, { merge: true });
       } catch (error) {
         console.log("error", error.message);
       }
@@ -174,7 +154,7 @@ const Map = () => {
       const unsuscribe = onSnapshot(colRef, (snapshot) => {
         const users = snapshot.docs.map((doc) => {
           // const pinDocRef = doc(doc, "pin", "pin_uid");
-          // console.log(".........data.........", doc.data());
+
           return doc.data();
         });
         dispatch(updateUsers(users));
@@ -208,7 +188,6 @@ const Map = () => {
               // description={user.shop.description}
               pinColor={"green"}
               onPress={() => {
-                console.log("press");
                 navigation.navigate(
                   "Shop" as never,
                   {
@@ -227,7 +206,6 @@ const Map = () => {
           description={`lng: ${pin.longitude}`}
           pinColor={"red"}
           onPress={() => {
-            console.log("press");
             navigation.navigate(
               "Shop" as never,
               {

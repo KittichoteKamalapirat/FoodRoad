@@ -6,10 +6,11 @@ import { bgColor, grey0 } from "../../theme";
 import { ButtonTypes } from "../components/Buttons/Button";
 import IconButton from "../components/Buttons/IconButton";
 import HomeScreen from "../screens/HomeScreen";
-import LoginScreen from "../screens/LoginScreen";
+import LoginScreen from "../screens/CreateShopScreen";
 import RegisterScreen from "../screens/RegisterScreen";
 import SettingScreen from "../screens/SettingScreen";
 import ShopScreen from "../screens/ShopScreen";
+import CreateShopScreen from "../screens/CreateShopScreen";
 
 const HomeStack = createNativeStackNavigator();
 
@@ -45,6 +46,14 @@ const HomeStackScreen = () => {
       <HomeStack.Screen
         name="Shop"
         component={ShopScreen}
+        options={({ route }) => ({
+          title: route.params?.name,
+        })}
+      />
+
+      <HomeStack.Screen
+        name="CreateShop"
+        component={CreateShopScreen}
         options={({ route }) => ({
           title: route.params?.name,
         })}

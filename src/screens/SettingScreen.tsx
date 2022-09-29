@@ -90,6 +90,14 @@ const SettingScreen = ({ navigation }: Props) => {
 
       <View style={tw`mt-4`}>
         <Button
+          label="Create Shop"
+          onPress={() => navigation.navigate("CreateShop")}
+          type={ButtonTypes.TEXT}
+        />
+      </View>
+
+      <View style={tw`mt-4`}>
+        <Button
           label="Delete Account"
           onPress={createTwoButtonAlert}
           type={ButtonTypes.TEXT}

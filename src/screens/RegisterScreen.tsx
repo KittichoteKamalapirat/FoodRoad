@@ -18,7 +18,6 @@ import MyText from "../components/MyTexts/MyText";
 import { app, auth, firestore } from "../firebase/client";
 import useAuth from "../hooks/useAuth";
 import tw from "../lib/tailwind";
-import { Pin, updateUsers } from "../redux/slices/usersReducer";
 import { formatphoneNumber } from "../utils/formatPhoneNumber";
 
 interface Props {
@@ -112,7 +111,7 @@ const RegisterScreen = ({ navigation }: Props) => {
             value={phoneNumber}
             placeholder="Phone number"
             placeholderTextColor={grey100}
-            style={tw`text-grey-0 bg-grey-500 w-full h-8 p-2 rounded-sm m-auto my-2`}
+            style={tw`text-grey-0 bg-grey-500 w-full h-12 p-2 rounded-sm m-auto my-2`}
           />
         </View>
 
@@ -126,7 +125,7 @@ const RegisterScreen = ({ navigation }: Props) => {
             placeholder="verification code"
             placeholderTextColor={grey100}
             secureTextEntry={true}
-            style={tw`text-grey-0 bg-grey-500 w-full h-8 p-2 rounded-sm m-auto my-2`}
+            style={tw`text-grey-0 bg-grey-500 w-full h-12 p-2 rounded-sm m-auto my-2`}
           />
         </View>
 
