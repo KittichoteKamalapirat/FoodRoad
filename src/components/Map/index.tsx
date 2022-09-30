@@ -1,12 +1,11 @@
 import { doc, onSnapshot, setDoc } from "@firebase/firestore";
-import { useNavigation } from "@react-navigation/native";
 import {
   getCurrentPositionAsync,
   requestForegroundPermissionsAsync,
 } from "expo-location";
 import { collection } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { View } from "react-native";
 import MapView, { Marker, Region } from "react-native-maps";
 import { useDispatch, useSelector } from "react-redux";
 import MePin from "../../../assets/svg/me_pin.svg";
@@ -25,9 +24,9 @@ import { updateSelectedShop } from "../../redux/slices/selectedShopReducer";
 import { updateUsers } from "../../redux/slices/usersReducer";
 import { RootState } from "../../redux/store";
 import { Pin } from "../../types/Pin";
-import { Shop } from "../../types/Shop";
 import { User } from "../../types/User";
-import MyText from "../MyTexts/MyText";
+import { debounce } from "../../utils/debounce";
+import MySearchBar from "../MySearchbBar";
 
 const initialRegion: Region = {
   latitude: CALIFORNIA_LATITUDE,
@@ -43,9 +42,30 @@ const Map = () => {
   });
 
   const dispatch = useDispatch();
+  const [filteredSellers, setFilteredSellers] = useState<User[]>([]);
   const [errorMsg, setErrorMsg] = useState("");
   const [region, setRegion] = useState<Region>(initialRegion);
   const users = useSelector((state: RootState) => state.users);
+
+  const filterSellers = debounce((q: string) => {
+    const matchedSellers = users
+      .filter((user) => user.shop)
+      .filter((seller) => {
+        const name = seller.shop?.name || "";
+        const description = seller.shop?.description || "";
+        return (name + description).toLowerCase().includes(q.toLowerCase());
+      });
+    setFilteredSellers(matchedSellers);
+  });
+
+  const handleSearch = (q: string) => {
+    if (q !== "") {
+      filterSellers(q);
+    } else {
+      // if not searching => set back to empty array
+      debounce(() => setFilteredSellers([]))();
+    }
+  };
 
   const onRegionChange = (region: Region) => {
     setRegion(region);
@@ -76,6 +96,23 @@ const Map = () => {
     return <PersonPin width={120} height={40} />;
   };
 
+  const renderMarker = (user: User, index: number) => (
+    <Marker
+      key={index}
+      coordinate={{
+        latitude: user?.pin.latitude,
+        longitude: user?.pin.longitude,
+      }}
+      // title={user.shop.title}
+      // description={user.shop.description}
+      pinColor={"green"}
+      onPress={() => {
+        dispatch(updateSelectedShop(user.shop));
+      }}
+    >
+      {getPinType(user)}
+    </Marker>
+  );
   // request permission
   useEffect(() => {
     (async () => {
@@ -134,6 +171,8 @@ const Map = () => {
     }
   }, [dispatch, updateUsers, auth.currentUser]);
 
+  const [searchQuery, setSearchQuery] = useState<string>("");
+
   return (
     <View style={tw`flex-1 bg-grey-0 items-center justify-center`}>
       <MapView
@@ -142,24 +181,16 @@ const Map = () => {
         onRegionChange={onRegionChange}
         mapType="mutedStandard"
       >
-        {users.map((user, index) => (
-          <Marker
-            key={index}
-            coordinate={{
-              latitude: user?.pin.latitude,
-              longitude: user?.pin.longitude,
-            }}
-            // title={user.shop.title}
-            // description={user.shop.description}
-            pinColor={"green"}
-            onPress={() => {
-              dispatch(updateSelectedShop(user.shop));
-            }}
-          >
-            {getPinType(user)}
-          </Marker>
-        ))}
+        {filteredSellers.length > 0
+          ? filteredSellers.map(renderMarker)
+          : users.map(renderMarker)}
       </MapView>
+      <MySearchBar
+        onChange={(text: string) => handleSearch(text)}
+        searchText={searchQuery}
+        placeholder="Search for food"
+        style="absolute top-2 mx-1"
+      />
     </View>
   );
 };

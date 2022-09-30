@@ -9,6 +9,7 @@ import ScreenLayout from "../components/layouts/ScreenLayout";
 import MyText from "../components/MyTexts/MyText";
 import { auth, firestore } from "../firebase/client";
 import tw from "../lib/tailwind";
+import usersReducer from "../redux/slices/usersReducer";
 
 interface Props {
   navigation: NavigationScreenProp<any, any>;
