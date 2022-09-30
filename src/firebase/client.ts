@@ -61,7 +61,7 @@ export const signInWithGoogle = async () => {
     // const docRef = await addDoc(collection(firestore, "users"), newUser);
     const userRef = doc(firestore, "users", uid);
 
-    const docRef = await setDoc(userRef, newUser);
+    await setDoc(userRef, newUser);
   } catch (error) {
     console.log("error", error);
   }

@@ -9,11 +9,17 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import MapView, { Marker, Region } from "react-native-maps";
 import { useDispatch, useSelector } from "react-redux";
+import MePin from "../../../assets/svg/me_pin.svg";
+import PersonPin from "../../../assets/svg/person_pin.svg";
+import ShopPin from "../../../assets/svg/shop_pin.svg";
 import { auth, firestore } from "../../firebase/client";
 import tw from "../../lib/tailwind";
+import { updateSelectedShop } from "../../redux/slices/selectedShopReducer";
 import { updateUsers } from "../../redux/slices/usersReducer";
 import { RootState } from "../../redux/store";
 import { Pin } from "../../types/Pin";
+import { Shop } from "../../types/Shop";
+import { User } from "../../types/User";
 import MyText from "../MyTexts/MyText";
 
 const POLL_INTERVAL = 5000;
@@ -43,6 +49,8 @@ const Map = () => {
   const [errorMsg, setErrorMsg] = useState("");
   const [region, setRegion] = useState<Region>(initialRegion);
   const users = useSelector((state: RootState) => state.users);
+
+  const [selectedShop, setSelectedShop] = useState<Shop | null>(null);
 
   const onRegionChange = (region: Region) => {
     setRegion(region);
@@ -79,50 +87,6 @@ const Map = () => {
     })();
   }, [requestForegroundPermissionsAsync]);
 
-  // find  current position and update to firestore
-  // useEffect(() => {
-  //   (async () => {
-  //     try {
-  //       const myPin = await getMyLocation();
-  //       setPin(myPin);
-
-  //       // update to firestore
-  //       const userDocRef = doc(
-  //         firestore,
-  //         "users",
-  //         auth.currentUser?.uid as string
-  //       );
-  //       await setDoc(userDocRef, pin, { merge: true });
-  //     } catch (error) {
-  //       console.log("error", error.message);
-  //     }
-  //   })();
-  // }, [auth.currentUser, region.latitude, region.longitude]);
-
-  // update current location for the curent user
-  // useEffect(() => {
-  //   (async () => {
-  //     try {
-  //       // create current location in user in firebases
-  //       console.log("set current location");
-  //       const userDocRef = doc(
-  //         firestore,
-  //         "users",
-  //         auth.currentUser?.uid as string
-  //       );
-
-  //       // const pinDocRef = doc(userDocRef, "pin", "pin_uid");
-  //       // const pinColRef = collection(userDocRef, "pin", );
-
-  //       // await setDoc(pinDocRef, pin);
-
-  //       await setDoc(userDocRef, pin, { merge: true });
-  //     } catch (error) {
-  //       console.log("error", error.message);
-  //     }
-  //   })();
-  // }, [auth.currentUser, pin]);
-
   // get and set live location
   useEffect(() => {
     const interval = setInterval(async () => {
@@ -136,7 +100,7 @@ const Map = () => {
           "users",
           auth.currentUser?.uid as string
         );
-        await setDoc(userDocRef, { pin }, { merge: true });
+        await setDoc(userDocRef, { pin: myPin }, { merge: true });
       } catch (error) {
         console.log("error", error.message);
       }
@@ -166,8 +130,17 @@ const Map = () => {
     }
   }, [dispatch, updateUsers, auth.currentUser]);
 
+  const getPinType = (user: User) => {
+    if (user.uid === auth.currentUser?.uid)
+      return <MePin width={120} height={40} />;
+
+    if (user.isSeller) return <ShopPin width={120} height={40} />;
+
+    return <PersonPin width={120} height={40} />;
+  };
+
   return (
-    <View style={styles.container}>
+    <View style={tw`flex-1 bg-grey-0 items-center justify-center`}>
       <MapView
         style={tw`h-full w-full`}
         initialRegion={region}
@@ -175,82 +148,26 @@ const Map = () => {
         mapType="mutedStandard"
       >
         {/* others markets */}
-        {users
-          .filter((user) => user.uid !== auth.currentUser?.uid)
-          .map((user, index) => (
-            <Marker
-              key={index}
-              coordinate={{
-                latitude: user?.latitude,
-                longitude: user?.longitude,
-              }}
-              // title={user.shop.title}
-              // description={user.shop.description}
-              pinColor={"green"}
-              onPress={() => {
-                navigation.navigate(
-                  "Shop" as never,
-                  {
-                    shopId: user.uid,
-                  } as never
-                );
-              }}
-              // image={{ uri: "./assets/pins/black_pin" }}
-            />
-          ))}
-
-        {/*  my marker */}
-        <Marker
-          coordinate={{ latitude: pin.latitude, longitude: pin.longitude }}
-          title={`lat: ${pin.latitude}`}
-          description={`lng: ${pin.longitude}`}
-          pinColor={"red"}
-          onPress={() => {
-            navigation.navigate(
-              "Shop" as never,
-              {
-                // shopId: shop.id,
-              } as never
-            );
-          }}
-          // image={{ uri: "./assets/pins/black_pin" }}
-        />
+        {users.map((user, index) => (
+          <Marker
+            key={index}
+            coordinate={{
+              latitude: user?.pin.latitude,
+              longitude: user?.pin.longitude,
+            }}
+            // title={user.shop.title}
+            // description={user.shop.description}
+            pinColor={"green"}
+            onPress={() => {
+              dispatch(updateSelectedShop(user.shop));
+            }}
+          >
+            {getPinType(user)}
+          </Marker>
+        ))}
       </MapView>
-      <View style={tw`pt-10`}>
-        <MyText>hi</MyText>
-        <MyText>hi</MyText>
-        <MyText>user num: {users.length}</MyText>
-        <MyText>
-          another user:
-          {
-            users.filter((user) => user.uid !== auth.currentUser?.uid)[0]
-              ?.latitude
-          }
-          {
-            users.filter((user) => user.uid !== auth.currentUser?.uid)[0]
-              ?.longitude
-          }
-        </MyText>
-
-        <MyText>
-          current user: {pin.latitude}
-          {pin.longitude}
-        </MyText>
-
-        <MyText>lat: {pin.latitude}</MyText>
-        <MyText>lng: {pin.longitude}</MyText>
-      </View>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
 
 export default Map;

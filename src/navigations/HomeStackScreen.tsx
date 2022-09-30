@@ -6,11 +6,11 @@ import { bgColor, grey0 } from "../../theme";
 import { ButtonTypes } from "../components/Buttons/Button";
 import IconButton from "../components/Buttons/IconButton";
 import HomeScreen from "../screens/HomeScreen";
-import LoginScreen from "../screens/CreateShopScreen";
+import LoginScreen from "../screens/shops/CreateShopScreen";
 import RegisterScreen from "../screens/RegisterScreen";
 import SettingScreen from "../screens/SettingScreen";
-import ShopScreen from "../screens/ShopScreen";
-import CreateShopScreen from "../screens/CreateShopScreen";
+import ShopScreen from "../screens/shops/ShopScreen";
+import CreateShopScreen from "../screens/shops/CreateShopScreen";
 
 const HomeStack = createNativeStackNavigator();
 

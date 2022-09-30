@@ -1,16 +1,15 @@
-import { doc, setDoc } from "firebase/firestore";
 import React from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { Text, TextInput, View } from "react-native";
 import { NavigationScreenProp } from "react-navigation";
 import { useDispatch } from "react-redux";
-import { grey100 } from "../../theme";
-import Button from "../components/Buttons/Button";
-import ScreenLayout from "../components/layouts/ScreenLayout";
-import MyText from "../components/MyTexts/MyText";
-import { auth, firestore } from "../firebase/client";
-import tw from "../lib/tailwind";
-import { updateUser } from "../redux/slices/usersReducer";
+import { grey100 } from "../../../theme";
+import Button from "../../components/Buttons/Button";
+import ScreenLayout from "../../components/layouts/ScreenLayout";
+import MyText from "../../components/MyTexts/MyText";
+import { auth } from "../../firebase/client";
+import tw from "../../lib/tailwind";
+import { createShop } from "../../redux/slices/usersReducer";
 
 interface Props {
   navigation: NavigationScreenProp<any, any>;
@@ -24,11 +23,6 @@ enum FormNames {
 interface FormValues {
   [FormNames.NAME]: string;
   [FormNames.DESCRIPTION]: string;
-}
-
-interface UserError {
-  key?: string | null | undefined;
-  message?: string;
 }
 
 const defaultValues: FormValues = {
@@ -49,26 +43,10 @@ const CreateShopScreen = ({ navigation }: Props) => {
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     try {
-      console.log("creating a shop");
-      const userDocRef = doc(
-        firestore,
-        "users",
-        auth.currentUser?.uid as string
-      );
-
       const { name, description } = data;
       const shop = { name, description };
-
-      setDoc(userDocRef, { shop }, { merge: true });
-      dispatch(
-        updateUser({
-          uid: auth.currentUser?.uid as string,
-          name,
-          description,
-        })
-      );
+      dispatch(createShop(shop as any) as any); // TODO
       alert("Store successfully created");
-
       navigation.navigate("Shop", { userId: auth.currentUser?.uid as string });
     } catch (error) {
       console.log("⛔ catch block", error);

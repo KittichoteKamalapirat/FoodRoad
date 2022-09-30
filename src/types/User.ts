@@ -3,8 +3,9 @@ import { Shop } from "./Shop";
 
 export interface User {
   uid: string;
-  imgUrl: string;
-  isSeller: string;
+  photoURL?: string;
+  phoneNumber: string;
+  isSeller: boolean;
   pin: Pin;
-  shop: Shop;
+  shop?: Shop;
 }

@@ -3,6 +3,7 @@ import { Text, View } from "react-native";
 import { NavigationScreenProp } from "react-navigation";
 import ScreenLayout from "../components/layouts/ScreenLayout";
 import Map from "../components/Map";
+import ShopFooter from "../components/ShopFooter";
 import { auth } from "../firebase/client";
 import tw from "../lib/tailwind";
 
@@ -23,7 +24,7 @@ const HomeScreen = ({ navigation }: Props) => {
           <Map />
         </View>
         <View style={tw`h-1/5`}>
-          <Text>buttom</Text>
+          <ShopFooter />
         </View>
       </View>
     </ScreenLayout>

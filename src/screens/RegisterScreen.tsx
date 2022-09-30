@@ -18,6 +18,7 @@ import MyText from "../components/MyTexts/MyText";
 import { app, auth, firestore } from "../firebase/client";
 import useAuth from "../hooks/useAuth";
 import tw from "../lib/tailwind";
+import { User } from "../types/User";
 import { formatphoneNumber } from "../utils/formatPhoneNumber";
 
 interface Props {
@@ -62,21 +63,18 @@ const RegisterScreen = ({ navigation }: Props) => {
     try {
       const result = await signInWithCredential(auth, credential);
 
-      const { uid, phoneNumber } = result.user;
-      const newUser = {
+      const { uid, phoneNumber, photoURL } = result.user;
+      const newUser: User = {
         uid,
-        phoneNumber,
-        latitude: 0,
-        longitude: 0,
+        phoneNumber: phoneNumber || "",
+        pin: { latitude: 0, longitude: 0 },
+        isSeller: false,
+        ...(photoURL && { photoURL }),
       };
 
       const userRef = doc(firestore, "users", uid);
+      // create user in firebase, redux update auth.currentUser automatically
       await setDoc(userRef, newUser);
-
-      // const pinDocRef = doc(userRef, "pin", "pin_uid");
-
-      // const initialPin: Pin = { latitude: 0, longitude: 0 };
-      // await setDoc(pinDocRef, initialPin);
 
       setMessage({
         text: "Phone authentication successful 👍",

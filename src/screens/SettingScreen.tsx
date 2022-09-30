@@ -98,6 +98,18 @@ const SettingScreen = ({ navigation }: Props) => {
 
       <View style={tw`mt-4`}>
         <Button
+          label="My Shop"
+          onPress={() =>
+            navigation.navigate("Shop", {
+              userId: auth.currentUser?.uid as string,
+            })
+          }
+          type={ButtonTypes.TEXT}
+        />
+      </View>
+
+      <View style={tw`mt-4`}>
+        <Button
           label="Delete Account"
           onPress={createTwoButtonAlert}
           type={ButtonTypes.TEXT}

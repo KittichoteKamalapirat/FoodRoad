@@ -1,4 +1,4 @@
-import { Entypo, EvilIcons } from "@expo/vector-icons";
+import { Entypo } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import React from "react";
 import { Text, View } from "react-native";
