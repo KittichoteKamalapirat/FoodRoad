@@ -6,6 +6,7 @@ import { NavigationScreenProp } from "react-navigation";
 import Button, { ButtonTypes } from "../components/Buttons/Button";
 import { Container } from "../components/containers/Container";
 import ScreenLayout from "../components/layouts/ScreenLayout";
+import MyText from "../components/MyTexts/MyText";
 import { auth, firestore } from "../firebase/client";
 import tw from "../lib/tailwind";
 
@@ -16,8 +17,6 @@ interface Props {
 const Tab = createBottomTabNavigator();
 
 const SettingScreen = ({ navigation }: Props) => {
-  console.log("setting screen");
-
   const currentUser = auth.currentUser;
   const createTwoButtonAlert = () =>
     Alert.alert("Are you sure?", "This action cannot be undone", [
@@ -58,14 +57,15 @@ const SettingScreen = ({ navigation }: Props) => {
 
   const loggedInBody = (
     <View>
-      <View style={tw`bg-grey-850`}>
+      <View style={tw`bg-bg-color`}>
         <View style={tw`flex-row items-center m-2`}>
-          <Image
+          {/* <Image
             style={tw`w-20 h-20 rounded-full bg-grey-500 mr-2`}
             // source={{ uri: currentUser?.avatar }}
             source={{ uri: "xxx" }}
-          />
+          /> */}
           <View>
+            <MyText>Phone Number: {currentUser?.phoneNumber}</MyText>
             {/* <MyText fontColor="text-grey-300">
               username:{" "}
               <MyText>
