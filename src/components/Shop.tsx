@@ -1,6 +1,6 @@
 import { RouteProp, useRoute } from "@react-navigation/native";
 import React from "react";
-import { View } from "react-native";
+import { Image, View } from "react-native";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
 import { Container } from "./containers/Container";
@@ -15,12 +15,15 @@ const Shop = () => {
     (user) => user.uid === userId
   );
 
+  const { name, description, imgUrl } = seller?.shop || {};
+
   return (
     <ScreenLayout justifyContent="justify-start">
       <Container>
         <View style={{ flex: 1 }}>
-          <MyText>{seller?.shop?.name}</MyText>
-          <MyText>{seller?.shop?.description}</MyText>
+          <MyText>{name}</MyText>
+          <MyText>{description}</MyText>
+          <Image source={{ uri: imgUrl }} style={{ width: 200, height: 200 }} />
         </View>
       </Container>
     </ScreenLayout>

@@ -14,9 +14,6 @@ interface Props {
 const HomeScreen = ({ navigation }: Props) => {
   const user = auth.currentUser?.phoneNumber;
 
-  console.log("user", user);
-  console.log("home screen, BoxesScreen");
-
   return (
     <ScreenLayout>
       <View style={tw`h-screen`}>

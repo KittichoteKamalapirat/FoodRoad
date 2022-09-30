@@ -12,7 +12,7 @@ interface Props {
 
 const MyText = ({
   children,
-  fontColor = "text-grey-0",
+  fontColor = "text-grey-900",
   size = "text-md",
   weight = "",
   extraStyle = "",

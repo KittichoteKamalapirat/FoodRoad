@@ -65,7 +65,7 @@ const useTextStyle = ({ type, fontColor, size }: ClassProps) => {
       return `${commonStyle} text-bg-color`;
 
     case ButtonTypes.TEXT:
-      return ` ${fontColor || "text-grey-0"} `;
+      return ` ${fontColor || "text-text-primary"} `;
 
     case ButtonTypes.PRIMARY:
     default:

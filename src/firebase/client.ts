@@ -18,6 +18,7 @@ import {
   setDoc,
   where,
 } from "firebase/firestore";
+import { getStorage, ref } from "firebase/storage";
 import { getFunctions, httpsCallable } from "firebase/functions";
 import { formatphoneNumber } from "../utils/formatPhoneNumber";
 
@@ -40,6 +41,7 @@ useDeviceLanguage(auth);
 
 export const firestore = getFirestore(app);
 export const functions = getFunctions(app);
+export const storage = getStorage(app);
 
 const provider = new GoogleAuthProvider();
 

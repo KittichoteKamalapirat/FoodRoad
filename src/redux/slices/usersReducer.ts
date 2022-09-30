@@ -11,9 +11,11 @@ export const createShop = createAsyncThunk(
   "users/createShop",
   async (shopInput: Shop) => {
     try {
+      const { name, description, imgUrl } = shopInput;
       const shop: Shop = {
-        name: shopInput.name,
-        description: shopInput.description,
+        name,
+        description,
+        imgUrl,
       };
 
       const userDocRef = doc(
@@ -50,9 +52,10 @@ export const usersSlice = createSlice({
       // state = users, no need state.users
       state.map((user) => {
         if (user.uid === action.payload.uid) {
-          const newShop = {
+          const newShop: Shop = {
             name: action.payload.name,
             description: action.payload.description,
+            imgUrl: action.payload.imgUrl,
           };
           user.shop = newShop;
         }

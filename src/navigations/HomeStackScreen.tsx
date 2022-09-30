@@ -2,15 +2,17 @@ import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationScreenProp } from "react-navigation";
-import { bgColor, grey0 } from "../../theme";
+import { bgColor, primaryTextColor } from "../../theme";
 import { ButtonTypes } from "../components/Buttons/Button";
 import IconButton from "../components/Buttons/IconButton";
 import HomeScreen from "../screens/HomeScreen";
-import LoginScreen from "../screens/shops/CreateShopScreen";
 import RegisterScreen from "../screens/RegisterScreen";
 import SettingScreen from "../screens/SettingScreen";
+import {
+  default as CreateShopScreen,
+  default as LoginScreen,
+} from "../screens/shops/CreateShopScreen";
 import ShopScreen from "../screens/shops/ShopScreen";
-import CreateShopScreen from "../screens/shops/CreateShopScreen";
 
 const HomeStack = createNativeStackNavigator();
 
@@ -20,7 +22,7 @@ const HomeStackScreen = () => {
   return (
     <HomeStack.Navigator
       screenOptions={{
-        headerTintColor: grey0,
+        headerTintColor: primaryTextColor,
         headerTitleAlign: "left", // todo not working
         headerStyle: { backgroundColor: bgColor },
       }}
@@ -34,7 +36,11 @@ const HomeStackScreen = () => {
           headerRight: () => (
             <IconButton
               icon={
-                <Ionicons name="settings-outline" size={24} color={grey0} />
+                <Ionicons
+                  name="settings-outline"
+                  size={24}
+                  color={primaryTextColor}
+                />
               }
               type={ButtonTypes.TEXT}
               onPress={() => navigation.navigate("Setting")}
@@ -66,7 +72,13 @@ const HomeStackScreen = () => {
           headerLeft: () => (
             <IconButton
               onPress={() => navigation.navigate("Setting")}
-              icon={<Ionicons name="chevron-back" size={24} color={grey0} />}
+              icon={
+                <Ionicons
+                  name="chevron-back"
+                  size={24}
+                  color={primaryTextColor}
+                />
+              }
               type={ButtonTypes.TEXT}
             />
           ),
@@ -79,7 +91,13 @@ const HomeStackScreen = () => {
           headerLeft: () => (
             <IconButton
               onPress={() => navigation.navigate("Setting")}
-              icon={<Ionicons name="chevron-back" size={24} color={grey0} />}
+              icon={
+                <Ionicons
+                  name="chevron-back"
+                  size={24}
+                  color={primaryTextColor}
+                />
+              }
               type={ButtonTypes.TEXT}
             />
           ),

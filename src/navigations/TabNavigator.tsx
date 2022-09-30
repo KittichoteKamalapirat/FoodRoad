@@ -2,7 +2,12 @@ import { Entypo } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import React from "react";
 import { Text, View } from "react-native";
-import { bgColor, grey0, grey300, primaryColor } from "../../theme";
+import {
+  bgColor,
+  inactiveGrey,
+  primaryColor,
+  primaryTextColor,
+} from "../../theme";
 import tw from "../lib/tailwind";
 import HomeStackScreen from "./HomeStackScreen";
 
@@ -38,9 +43,15 @@ const TabNavigator = ({ routeName }: Props) => {
           tabBarShowLabel: false,
           tabBarIcon: ({ focused }) => (
             <View style={tw`flex items-center justify-center`}>
-              <Entypo name="home" size={28} color={focused ? grey0 : grey300} />
+              <Entypo
+                name="home"
+                size={28}
+                color={focused ? primaryTextColor : inactiveGrey}
+              />
               <Text
-                style={tw`${focused ? "text-grey-0" : "text-grey-300"} text-sm`}
+                style={tw`${
+                  focused ? "text-text-primary" : "text-inactive"
+                } text-sm`}
               >
                 Home
               </Text>

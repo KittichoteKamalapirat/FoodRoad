@@ -12,6 +12,13 @@ import { useDispatch, useSelector } from "react-redux";
 import MePin from "../../../assets/svg/me_pin.svg";
 import PersonPin from "../../../assets/svg/person_pin.svg";
 import ShopPin from "../../../assets/svg/shop_pin.svg";
+import {
+  CALIFORNIA_LATITUDE,
+  CALIFORNIA_LONGITUDE,
+  LATITUDE_DELTA,
+  LONGITUDE_DELTA,
+  POLL_INTERVAL,
+} from "../../constants";
 import { auth, firestore } from "../../firebase/client";
 import tw from "../../lib/tailwind";
 import { updateSelectedShop } from "../../redux/slices/selectedShopReducer";
@@ -22,14 +29,6 @@ import { Shop } from "../../types/Shop";
 import { User } from "../../types/User";
 import MyText from "../MyTexts/MyText";
 
-const POLL_INTERVAL = 5000;
-const MY_HOUSE_LATITUDE = 13.8732940339;
-const MY_HOUSE_LONGITUDE = 13.8732940339;
-const CALIFORNIA_LATITUDE = 37.4214938;
-const CALIFORNIA_LONGITUDE = -122.083922;
-const LATITUDE_DELTA = 0.004757;
-const LONGITUDE_DELTA = 0.00686;
-
 const initialRegion: Region = {
   latitude: CALIFORNIA_LATITUDE,
   longitude: CALIFORNIA_LONGITUDE,
@@ -38,8 +37,6 @@ const initialRegion: Region = {
 };
 
 const Map = () => {
-  const navigation = useNavigation();
-
   const [pin, setPin] = useState<Pin>({
     latitude: CALIFORNIA_LATITUDE,
     longitude: CALIFORNIA_LONGITUDE,
@@ -49,8 +46,6 @@ const Map = () => {
   const [errorMsg, setErrorMsg] = useState("");
   const [region, setRegion] = useState<Region>(initialRegion);
   const users = useSelector((state: RootState) => state.users);
-
-  const [selectedShop, setSelectedShop] = useState<Shop | null>(null);
 
   const onRegionChange = (region: Region) => {
     setRegion(region);
@@ -70,6 +65,15 @@ const Map = () => {
     const { latitude, longitude } = location.coords;
     const myPin = { latitude, longitude };
     return myPin;
+  };
+
+  const getPinType = (user: User) => {
+    if (user.uid === auth.currentUser?.uid)
+      return <MePin width={120} height={40} />;
+
+    if (user.isSeller) return <ShopPin width={120} height={40} />;
+
+    return <PersonPin width={120} height={40} />;
   };
 
   // request permission
@@ -130,15 +134,6 @@ const Map = () => {
     }
   }, [dispatch, updateUsers, auth.currentUser]);
 
-  const getPinType = (user: User) => {
-    if (user.uid === auth.currentUser?.uid)
-      return <MePin width={120} height={40} />;
-
-    if (user.isSeller) return <ShopPin width={120} height={40} />;
-
-    return <PersonPin width={120} height={40} />;
-  };
-
   return (
     <View style={tw`flex-1 bg-grey-0 items-center justify-center`}>
       <MapView
@@ -147,7 +142,6 @@ const Map = () => {
         onRegionChange={onRegionChange}
         mapType="mutedStandard"
       >
-        {/* others markets */}
         {users.map((user, index) => (
           <Marker
             key={index}

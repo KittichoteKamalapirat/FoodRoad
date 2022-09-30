@@ -1,15 +1,19 @@
-import React from "react";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { launchImageLibraryAsync, MediaTypeOptions } from "expo-image-picker";
+import React, { useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import { Text, TextInput, View } from "react-native";
+import { Image, Text, TextInput, View } from "react-native";
+
 import { NavigationScreenProp } from "react-navigation";
 import { useDispatch } from "react-redux";
 import { grey100 } from "../../../theme";
 import Button from "../../components/Buttons/Button";
 import ScreenLayout from "../../components/layouts/ScreenLayout";
 import MyText from "../../components/MyTexts/MyText";
-import { auth } from "../../firebase/client";
+import { auth, storage } from "../../firebase/client";
 import tw from "../../lib/tailwind";
 import { createShop } from "../../redux/slices/usersReducer";
+import { Shop } from "../../types/Shop";
 
 interface Props {
   navigation: NavigationScreenProp<any, any>;
@@ -30,6 +34,42 @@ const defaultValues: FormValues = {
   description: "",
 };
 const CreateShopScreen = ({ navigation }: Props) => {
+  const [imageUrl, setImageUrl] = useState("");
+  const [isUploading, setIsUploading] = useState(false);
+
+  const pickImage = async () => {
+    let result = await launchImageLibraryAsync({
+      mediaTypes: MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.cancelled) {
+      setImageUrl(result.uri);
+    }
+  };
+
+  const uploadImage = async () => {
+    setIsUploading(true);
+    const response = await fetch(imageUrl);
+    const blob = await response.blob();
+    const fileName = imageUrl.substring(imageUrl.lastIndexOf("/") + 1);
+    // Create a reference to fileName
+    const storageRef = ref(storage, `images/shops/${fileName}`);
+
+    try {
+      await uploadBytes(storageRef, blob);
+      const downloadUrl = await getDownloadURL(storageRef);
+      console.log("---------download url-----------", downloadUrl);
+      return downloadUrl;
+    } catch (error) {
+      console.log("error uploading image", error.message);
+      return ""; // TODO do something?
+    }
+    setIsUploading(false);
+  };
+  console.log("iamge", imageUrl);
   const {
     control,
     handleSubmit,
@@ -44,8 +84,11 @@ const CreateShopScreen = ({ navigation }: Props) => {
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     try {
       const { name, description } = data;
-      const shop = { name, description };
+
+      const downloadUrl = await uploadImage();
+      const shop: Shop = { name, description, imgUrl: downloadUrl };
       dispatch(createShop(shop as any) as any); // TODO
+
       alert("Store successfully created");
       navigation.navigate("Shop", { userId: auth.currentUser?.uid as string });
     } catch (error) {
@@ -76,7 +119,7 @@ const CreateShopScreen = ({ navigation }: Props) => {
                 value={value}
                 placeholder="ชื่อร้าน"
                 placeholderTextColor={grey100}
-                style={tw` text-grey-0 bg-grey-500 w-full h-12 p-2 rounded-sm m-auto my-2`}
+                style={tw` text-text-primary bg-grey-500 w-full h-12 p-2 rounded-sm m-auto my-2`}
               />
             )}
           />
@@ -101,7 +144,7 @@ const CreateShopScreen = ({ navigation }: Props) => {
                   value={value}
                   placeholder="หมูปิ้ง ไม้ละ 10 บาท"
                   placeholderTextColor={grey100}
-                  style={tw`text-grey-0 bg-grey-500 w-full h-12 p-2 rounded-sm m-auto my-2`}
+                  style={tw`text-text-primary bg-grey-500 w-full h-12 p-2 rounded-sm m-auto my-2`}
                 />
               )}
             />
@@ -109,6 +152,20 @@ const CreateShopScreen = ({ navigation }: Props) => {
 
           {errors.description && <Text>This is required.</Text>}
         </View>
+        {imageUrl && (
+          <Image
+            source={{ uri: imageUrl }}
+            style={{ width: 200, height: 200 }}
+          />
+        )}
+        <Button
+          label={
+            imageUrl ? "Change an image" : "Pick an image from camera roll"
+          }
+          onPress={pickImage}
+        />
+
+        {/* {imageUrl && <Button label="Upload" onPress={uploadImage} />} */}
 
         <View style={tw`mt-6`}>
           <Button label="สร้างร้าน" onPress={handleSubmit(onSubmit)} />

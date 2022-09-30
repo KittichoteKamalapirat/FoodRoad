@@ -14,12 +14,19 @@ export const blue = "#4E97F3";
 export const grey0 = "#FFFFFF";
 export const grey50 = "#F5F0F0";
 export const grey100 = "#E0E0E0";
+export const grey200 = "#C2C2C2";
 export const grey300 = "#8F8F8F";
+export const grey400 = "#7A7A7A";
 export const grey500 = "#666666";
+export const grey600 = "#525252";
 export const grey700 = "#3D3D3D";
+export const grey800 = "#292929";
+export const grey850 = "#1F1F1F";
 export const grey900 = "#121212";
 
-export const bgColor = grey900;
+export const bgColor = grey0;
+export const primaryTextColor = grey900;
+export const inactiveGrey = grey200;
 
 // font family
 export const sansFamily = ["TTCommonsRegular", "Arial", "sans-serif"];
