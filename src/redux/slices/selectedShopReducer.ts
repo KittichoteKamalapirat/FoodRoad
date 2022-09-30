@@ -4,6 +4,7 @@ import { Shop } from "../../types/Shop";
 const initialState: Shop = {
   name: "",
   description: "",
+  imgUrl: "",
 };
 
 export const selectedShopSlice = createSlice({

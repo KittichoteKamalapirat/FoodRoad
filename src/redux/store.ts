@@ -1,5 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { useDispatch } from "react-redux";
+import meReducer from "./slices/meReducer";
 import selectedShopReducer from "./slices/selectedShopReducer";
 import usersReducer from "./slices/usersReducer";
 
@@ -8,6 +9,7 @@ const store = configureStore({
   reducer: {
     users: usersReducer,
     selectedShop: selectedShopReducer,
+    me: meReducer,
   },
 });
 

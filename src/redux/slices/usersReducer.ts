@@ -29,7 +29,7 @@ export const createShop = createAsyncThunk(
       const userDocSnap = await getDoc(userDocRef);
 
       if (userDocSnap.exists()) {
-        return userDocSnap.data();
+        return userDocSnap.data(); // return to set redux state
       } else {
         // doc.data() will be undefined in this case
         console.log("No such document!");
@@ -45,7 +45,6 @@ export const usersSlice = createSlice({
   initialState,
   reducers: {
     updateUsers: (state, action) => {
-      console.log("update userssssssssss", state);
       return action.payload;
     },
     updateUser: (state, action) => {

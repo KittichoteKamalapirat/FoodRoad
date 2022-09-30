@@ -4,8 +4,6 @@
 // for
 // 1. when tailwind can't be used such as in icon, styledComponent
 // 2. can be used in tailwind config as well
-export const primaryColor = "#FDAE5B";
-export const primaryHoveredColor = "#FEBA72";
 
 export const green = "#57B65F";
 export const blue = "#4E97F3";
@@ -23,6 +21,9 @@ export const grey700 = "#3D3D3D";
 export const grey800 = "#292929";
 export const grey850 = "#1F1F1F";
 export const grey900 = "#121212";
+
+export const primaryColor = "#DB4437";
+export const primaryHoveredColor = "#FEBA72";
 
 export const bgColor = grey0;
 export const primaryTextColor = grey900;

@@ -18,6 +18,7 @@ import MyText from "../components/MyTexts/MyText";
 import { app, auth, firestore } from "../firebase/client";
 import useAuth from "../hooks/useAuth";
 import tw from "../lib/tailwind";
+import { setMe } from "../redux/slices/meReducer";
 import { User } from "../types/User";
 import { formatphoneNumber } from "../utils/formatPhoneNumber";
 
@@ -61,20 +62,7 @@ const RegisterScreen = ({ navigation }: Props) => {
   const confirmSmsCode = async (verificationId: string, code: string) => {
     const credential = PhoneAuthProvider.credential(verificationId, code);
     try {
-      const result = await signInWithCredential(auth, credential);
-
-      const { uid, phoneNumber, photoURL } = result.user;
-      const newUser: User = {
-        uid,
-        phoneNumber: phoneNumber || "",
-        pin: { latitude: 0, longitude: 0 },
-        isSeller: false,
-        ...(photoURL && { photoURL }),
-      };
-
-      const userRef = doc(firestore, "users", uid);
-      // create user in firebase, redux update auth.currentUser automatically
-      await setDoc(userRef, newUser);
+      dispatch(setMe(credential) as any);
 
       setMessage({
         text: "Phone authentication successful 👍",
@@ -109,12 +97,12 @@ const RegisterScreen = ({ navigation }: Props) => {
             value={phoneNumber}
             placeholder="Phone number"
             placeholderTextColor={grey100}
-            style={tw`text-text-primary bg-grey-500 w-full h-12 p-2 rounded-sm m-auto my-2`}
+            style={tw`text-text-primary bg-grey-0 border-1 border-grey-300 w-full h-12 p-2 rounded-md m-auto my-2`}
           />
         </View>
 
         <View style={tw`mt-2`}>
-          <Text style={tw`text-white`}>Verification code</Text>
+          <MyText>Verification code</MyText>
 
           <TextInput
             onChangeText={setCode}
@@ -122,8 +110,7 @@ const RegisterScreen = ({ navigation }: Props) => {
             value={code}
             placeholder="verification code"
             placeholderTextColor={grey100}
-            secureTextEntry={true}
-            style={tw`text-text-primary bg-grey-500 w-full h-12 p-2 rounded-sm m-auto my-2`}
+            style={tw`text-text-primary bg-grey-0 border-1 border-grey-300 w-full h-12 p-2 rounded-md m-auto my-2`}
           />
         </View>
 

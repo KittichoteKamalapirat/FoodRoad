@@ -1,11 +1,5 @@
 // when edit them, have to edit in both this file and tailwind.config.js
 
-const primaryColor = "#FDAE5B";
-const primaryHoveredColor = "#FEBA72";
-const green = "#57B65F";
-const blue = "#4E97F3";
-const red = "#FF2D2D";
-
 // white grey and black
 const grey0 = "#FFFFFF";
 const grey50 = "#F5F0F0";
@@ -19,6 +13,12 @@ const grey700 = "#3D3D3D";
 const grey800 = "#292929";
 const grey850 = "#1F1F1F";
 const grey900 = "#121212";
+
+const primaryColor = "#DB4437";
+const primaryHoveredColor = "#FEBA72";
+const green = "#57B65F";
+const blue = "#4E97F3";
+const red = "#FF2D2D";
 
 const bgColor = grey0;
 const primaryTextColor = grey900;
