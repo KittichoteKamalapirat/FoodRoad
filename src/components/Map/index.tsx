@@ -4,18 +4,10 @@ import {
   requestForegroundPermissionsAsync,
 } from "expo-location";
 import { collection } from "firebase/firestore";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View } from "react-native";
-import MapView, {
-  Marker,
-  AnimatedRegion,
-  Region,
-  Animated,
-  MarkerAnimated,
-} from "react-native-maps";
-
+import MapView, { Marker, Region } from "react-native-maps";
 import { useDispatch, useSelector } from "react-redux";
-import MePin from "../../../assets/svg/me_pin.svg";
 import MeWithDirectionPin from "../../../assets/svg/me_with_direction_pin.svg";
 import PersonPin from "../../../assets/svg/person_pin.svg";
 import ShopPin from "../../../assets/svg/shop_pin.svg";
@@ -27,7 +19,6 @@ import {
   POLL_INTERVAL,
 } from "../../constants";
 import { auth, firestore } from "../../firebase/client";
-import { usePrevPropValue } from "../../hooks/usePrevPropValue";
 import tw from "../../lib/tailwind";
 import { updateSelectedShop } from "../../redux/slices/selectedShopReducer";
 import { updateUsers } from "../../redux/slices/usersReducer";
@@ -89,11 +80,6 @@ const Map = () => {
     text = JSON.stringify(region);
   }
 
-  const markerRef = useRef<MarkerAnimated>(null);
-  const prevMePin = usePrevPropValue(myPin);
-
-  console.log("prevMePin", prevMePin);
-
   const getMyLocation = async () => {
     const location = await getCurrentPositionAsync();
     console.log("llive location", location);
@@ -129,9 +115,8 @@ const Map = () => {
   };
 
   const renderMarker = (user: User, index: number) => (
-    <MarkerAnimated
+    <Marker
       key={index}
-      ref={user.uid === currentUser.uid ? markerRef : undefined}
       coordinate={{
         latitude: user?.pin.latitude,
         longitude: user?.pin.longitude,
@@ -156,7 +141,7 @@ const Map = () => {
       }}
     >
       {getPinType(user)}
-    </MarkerAnimated>
+    </Marker>
   );
   // request permission
   useEffect(() => {
