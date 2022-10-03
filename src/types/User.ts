@@ -6,6 +6,7 @@ export interface User {
   photoURL?: string;
   phoneNumber: string;
   isSeller: boolean;
+  isGuest: boolean;
   pin: Pin;
   shop?: Shop;
 }

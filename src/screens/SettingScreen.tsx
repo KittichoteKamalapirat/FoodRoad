@@ -1,24 +1,24 @@
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { deleteDoc, doc, updateDoc } from "firebase/firestore";
+import { deleteDoc, doc } from "firebase/firestore";
 import React from "react";
-import { Alert, Image, View } from "react-native";
+import { Alert, View } from "react-native";
 import { NavigationScreenProp } from "react-navigation";
+import { useDispatch, useSelector } from "react-redux";
 import Button, { ButtonTypes } from "../components/Buttons/Button";
 import { Container } from "../components/containers/Container";
 import ScreenLayout from "../components/layouts/ScreenLayout";
 import MyText from "../components/MyTexts/MyText";
 import { auth, firestore } from "../firebase/client";
 import tw from "../lib/tailwind";
-import usersReducer from "../redux/slices/usersReducer";
+import { guestLogin, logout } from "../redux/slices/meReducer";
+import { RootState } from "../redux/store";
 
 interface Props {
   navigation: NavigationScreenProp<any, any>;
 }
 
-const Tab = createBottomTabNavigator();
-
 const SettingScreen = ({ navigation }: Props) => {
-  const currentUser = auth.currentUser;
+  const dispatch = useDispatch();
+  const currentUser = useSelector((state: RootState) => state.me);
   const createTwoButtonAlert = () =>
     Alert.alert("Are you sure?", "This action cannot be undone", [
       {
@@ -50,12 +50,23 @@ const SettingScreen = ({ navigation }: Props) => {
 
   const handleLogout = async () => {
     try {
-      await auth.signOut().then(() => navigation.navigate("Home"));
+      dispatch(logout() as any);
+      navigation.navigate("Home");
     } catch (error) {
       console.log("error logging out");
     }
   };
 
+  const handleGuestLogin = () => {
+    try {
+      console.log("handle guest login");
+      dispatch(guestLogin() as any);
+    } catch (error) {
+      console.log("guest login error", error.message);
+    }
+  };
+
+  console.log("current user", currentUser);
   const loggedInBody = (
     <View>
       <View style={tw`bg-bg-color`}>
@@ -66,7 +77,12 @@ const SettingScreen = ({ navigation }: Props) => {
             source={{ uri: "xxx" }}
           /> */}
           <View>
-            <MyText>Phone Number: {currentUser?.phoneNumber}</MyText>
+            {currentUser.isGuest ? (
+              <MyText>I am a guest</MyText>
+            ) : (
+              <MyText>Phone Number: {currentUser.phoneNumber}</MyText>
+            )}
+
             {/* <MyText fontColor="text-grey-300">
               username:{" "}
               <MyText>
@@ -124,26 +140,23 @@ const SettingScreen = ({ navigation }: Props) => {
     <ScreenLayout justifyContent="justify-start">
       <Container>
         <View>
-          {currentUser ? (
+          {currentUser.uid ? (
             loggedInBody
           ) : (
             <>
               <Button
-                label="Login"
+                label="Log in with phone number"
                 onPress={() =>
-                  navigation.navigate("Login", {
+                  navigation.navigate("Register", {
                     next: "Home",
                   })
                 }
               />
 
               <Button
-                label="Create account"
-                onPress={() =>
-                  navigation.navigate("Register", {
-                    next: "Home",
-                  })
-                }
+                label="Log in as guest"
+                onPress={handleGuestLogin}
+                type={ButtonTypes.OUTLINED}
               />
             </>
           )}

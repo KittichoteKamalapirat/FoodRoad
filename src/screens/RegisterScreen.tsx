@@ -88,64 +88,66 @@ const RegisterScreen = ({ navigation }: Props) => {
           style={tw`bg-grey-0 w-10 h-10`}
         />
 
-        <View style={tw`mt-2`}>
-          <MyText>Phone Number</MyText>
+        {!verificationId ? (
+          <View style={tw`mt-6`}>
+            <View style={tw`mt-2`}>
+              <MyText>Phone Number</MyText>
 
-          <TextInput
-            autoCapitalize="none"
-            onChangeText={setPhoneNumber}
-            value={phoneNumber}
-            placeholder="Phone number"
-            placeholderTextColor={grey100}
-            style={tw`text-text-primary bg-grey-0 border-1 border-grey-300 w-full h-12 p-2 rounded-md m-auto my-2`}
-          />
-        </View>
+              <TextInput
+                autoCapitalize="none"
+                onChangeText={setPhoneNumber}
+                value={phoneNumber}
+                placeholder="Phone number"
+                placeholderTextColor={grey100}
+                style={tw`text-text-primary bg-grey-0 border-1 border-grey-300 w-full h-12 p-2 rounded-md m-auto my-2`}
+              />
+            </View>
 
-        <View style={tw`mt-2`}>
-          <MyText>Verification code</MyText>
+            <Button
+              label="Send verification"
+              onPress={() => {
+                sendSmsVerification(
+                  phoneNumber,
+                  recaptchaVerifier.current as ApplicationVerifier,
+                  setVerificationId
+                );
+              }}
+            />
+          </View>
+        ) : (
+          <View style={tw`mt-6`}>
+            <View style={tw`mt-2`}>
+              <MyText>Verification code</MyText>
 
-          <TextInput
-            onChangeText={setCode}
-            autoCapitalize="none"
-            value={code}
-            placeholder="verification code"
-            placeholderTextColor={grey100}
-            style={tw`text-text-primary bg-grey-0 border-1 border-grey-300 w-full h-12 p-2 rounded-md m-auto my-2`}
-          />
-        </View>
+              <TextInput
+                onChangeText={setCode}
+                autoCapitalize="none"
+                value={code}
+                placeholder="verification code"
+                placeholderTextColor={grey100}
+                style={tw`text-text-primary bg-grey-0 border-1 border-grey-300 w-full h-12 p-2 rounded-md m-auto my-2`}
+              />
+            </View>
+
+            <Button
+              label="Verify"
+              onPress={() => {
+                confirmSmsCode(verificationId, code);
+              }}
+            />
+          </View>
+        )}
 
         {message.text && (
           <MyText fontColor={`text-${message.color}`}>{message.text} </MyText>
         )}
 
-        <View style={tw`mt-6`}>
-          <Button
-            label="Send verification"
-            onPress={() => {
-              sendSmsVerification(
-                phoneNumber,
-                recaptchaVerifier.current as ApplicationVerifier,
-                setVerificationId
-              );
-            }}
-          />
-        </View>
-
-        <View style={tw`mt-6`}>
-          <Button
-            label="Verify"
-            onPress={() => {
-              confirmSmsCode(verificationId, code);
-            }}
-          />
-        </View>
-
         <View style={tw`flex-row justify-center mt-2`}>
-          <MyText>Already have an account? </MyText>
+          <MyText>No phone number? </MyText>
           <Button
-            label="Log in"
+            label="Log in as a guest"
             type={ButtonTypes.TEXT}
-            onPress={() => navigation.navigate("Login")}
+            onPress={() => navigation.navigate("Setting")}
             size="text-md"
             fontColor="text-primary"
           />

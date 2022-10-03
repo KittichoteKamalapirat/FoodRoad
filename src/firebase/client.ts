@@ -1,11 +1,7 @@
 import { initializeApp } from "firebase/app";
 import {
-  ApplicationVerifier,
   getAuth,
-  GoogleAuthProvider,
-  PhoneAuthProvider,
-  signInWithCredential,
-  signInWithPopup,
+  signInAnonymously,
   signOut,
   useDeviceLanguage,
 } from "firebase/auth";
@@ -18,9 +14,9 @@ import {
   setDoc,
   where,
 } from "firebase/firestore";
-import { getStorage, ref } from "firebase/storage";
 import { getFunctions, httpsCallable } from "firebase/functions";
-import { formatphoneNumber } from "../utils/formatPhoneNumber";
+import { getStorage } from "firebase/storage";
+import { User } from "../types/User";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBrPMXdAw92A_vzV1VJ37iDDg4oTy1I4RI",
@@ -42,32 +38,6 @@ useDeviceLanguage(auth);
 export const firestore = getFirestore(app);
 export const functions = getFunctions(app);
 export const storage = getStorage(app);
-
-const provider = new GoogleAuthProvider();
-
-export const signInWithGoogle = async () => {
-  try {
-    const result = await signInWithPopup(auth, provider);
-    console.log("reslt", result);
-
-    const { email, displayName, photoURL, uid, providerData } = result.user;
-
-    const newUser = {
-      uid,
-      name: displayName,
-      email,
-      avatarUrl: photoURL,
-      provider: providerData[0].providerId,
-    };
-
-    // const docRef = await addDoc(collection(firestore, "users"), newUser);
-    const userRef = doc(firestore, "users", uid);
-
-    await setDoc(userRef, newUser);
-  } catch (error) {
-    console.log("error", error);
-  }
-};
 
 export const logout = () => {
   const response = signOut(auth);
