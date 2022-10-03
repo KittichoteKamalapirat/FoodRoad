@@ -1,22 +1,14 @@
 import { initializeApp } from "firebase/app";
-import {
-  getAuth,
-  signInAnonymously,
-  signOut,
-  useDeviceLanguage,
-} from "firebase/auth";
+import { getAuth, signOut, useDeviceLanguage } from "firebase/auth";
 import {
   collection,
-  doc,
   getDocs,
   getFirestore,
   query,
-  setDoc,
   where,
 } from "firebase/firestore";
 import { getFunctions, httpsCallable } from "firebase/functions";
 import { getStorage } from "firebase/storage";
-import { User } from "../types/User";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBrPMXdAw92A_vzV1VJ37iDDg4oTy1I4RI",

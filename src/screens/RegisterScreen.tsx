@@ -1,25 +1,19 @@
 import { RouteProp, useRoute } from "@react-navigation/native";
 import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
 // import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
-import {
-  ApplicationVerifier,
-  PhoneAuthProvider,
-  signInWithCredential,
-} from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
+import { ApplicationVerifier, PhoneAuthProvider } from "firebase/auth";
 import React, { useRef, useState } from "react";
-import { Text, TextInput, View } from "react-native";
+import { TextInput, View } from "react-native";
 import { NavigationScreenProp } from "react-navigation";
 import { useDispatch } from "react-redux";
 import { grey100 } from "../../theme";
 import Button, { ButtonTypes } from "../components/Buttons/Button";
 import ScreenLayout from "../components/layouts/ScreenLayout";
 import MyText from "../components/MyTexts/MyText";
-import { app, auth, firestore } from "../firebase/client";
+import { app, auth } from "../firebase/client";
 import useAuth from "../hooks/useAuth";
 import tw from "../lib/tailwind";
 import { setMe } from "../redux/slices/meReducer";
-import { User } from "../types/User";
 import { formatphoneNumber } from "../utils/formatPhoneNumber";
 
 interface Props {

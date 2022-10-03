@@ -37,16 +37,18 @@ const initialRegion: Region = {
 
 const Map = () => {
   const currentUser = useSelector((state: RootState) => state.me);
+  const users = useSelector((state: RootState) => state.users);
+  const dispatch = useDispatch();
+
   const [myPin, setMyPin] = useState<Pin>({
     latitude: CALIFORNIA_LATITUDE,
     longitude: CALIFORNIA_LONGITUDE,
   });
 
-  const dispatch = useDispatch();
   const [filteredSellers, setFilteredSellers] = useState<User[]>([]);
+  const [searchQuery, setSearchQuery] = useState<string>("");
   const [errorMsg, setErrorMsg] = useState("");
   const [region, setRegion] = useState<Region>(initialRegion);
-  const users = useSelector((state: RootState) => state.users);
 
   const filterSellers = debounce((q: string) => {
     const matchedSellers = users
@@ -95,19 +97,7 @@ const Map = () => {
 
   const getPinType = (user: User) => {
     if (user.uid === auth.currentUser?.uid)
-      return (
-        <MeWithDirectionPin
-          width={200}
-          height={100}
-          // style={{
-          //   transform: [
-          //     {
-          //       rotate: `${myPin.heading}deg`,
-          //     },
-          //   ],
-          // }}
-        />
-      );
+      return <MeWithDirectionPin width={200} height={100} />;
 
     if (user.isSeller) return <ShopPin width={120} height={40} />;
 
@@ -200,8 +190,6 @@ const Map = () => {
       };
     }
   }, [dispatch, updateUsers, auth.currentUser]);
-
-  const [searchQuery, setSearchQuery] = useState<string>("");
 
   return (
     <View style={tw`flex-1 bg-grey-0 items-center justify-center`}>

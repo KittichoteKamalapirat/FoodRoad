@@ -1,4 +1,3 @@
-import { deleteDoc, doc } from "firebase/firestore";
 import React from "react";
 import { Alert, View } from "react-native";
 import { NavigationScreenProp } from "react-navigation";
@@ -7,7 +6,7 @@ import Button, { ButtonTypes } from "../components/Buttons/Button";
 import { Container } from "../components/containers/Container";
 import ScreenLayout from "../components/layouts/ScreenLayout";
 import MyText from "../components/MyTexts/MyText";
-import { auth, firestore } from "../firebase/client";
+import { auth } from "../firebase/client";
 import tw from "../lib/tailwind";
 import { deleteUser, guestLogin, logout } from "../redux/slices/meReducer";
 import { RootState } from "../redux/store";
