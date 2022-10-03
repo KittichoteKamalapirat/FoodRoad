@@ -44,7 +44,7 @@ export const meSlice = createSlice({
       // TODO
       console.log("pending state", state);
     },
-    [setMe.fulfilled as any]: (state, action) => {
+    [setMe.fulfilled as any]: (wstate, action) => {
       return action.payload; // return to set state
     },
     [setMe.rejected as any]: (state, action) => {
