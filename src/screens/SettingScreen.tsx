@@ -9,7 +9,7 @@ import ScreenLayout from "../components/layouts/ScreenLayout";
 import MyText from "../components/MyTexts/MyText";
 import { auth, firestore } from "../firebase/client";
 import tw from "../lib/tailwind";
-import { guestLogin, logout } from "../redux/slices/meReducer";
+import { deleteUser, guestLogin, logout } from "../redux/slices/meReducer";
 import { RootState } from "../redux/store";
 
 interface Props {
@@ -35,14 +35,13 @@ const SettingScreen = ({ navigation }: Props) => {
   const handleDeleteUser = async () => {
     try {
       if (!auth.currentUser) return;
+      const result = dispatch(deleteUser(auth.currentUser.uid) as any);
+      console.log("result xxx", result);
 
-      const userRef = doc(firestore, "users", auth.currentUser.uid);
-      deleteDoc(userRef).then(() => {
-        auth.currentUser?.delete().then(() => {
-          navigation.navigate("Home");
-          alert("User successfully delete");
-        });
-      });
+      if (result) {
+        alert("User successfully delete");
+        navigation.navigate("Home");
+      }
     } catch (error) {
       console.log("error deleting the user", error);
     }

@@ -4,7 +4,7 @@ import {
   signInWithCredential,
 } from "@firebase/auth";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { doc, setDoc } from "firebase/firestore";
+import { deleteDoc, doc, setDoc } from "firebase/firestore";
 import { auth, firestore } from "../../firebase/client";
 import { User } from "../../types/User";
 
@@ -80,6 +80,25 @@ export const guestLogin = createAsyncThunk("me/guestLogin", async () => {
   }
 });
 
+// deleteUser
+export const deleteUser = createAsyncThunk(
+  "me/delete",
+  async (userId: string) => {
+    try {
+      await auth.signOut();
+      const userRef = doc(firestore, "users", userId);
+      deleteDoc(userRef).then(() => {
+        auth.currentUser?.delete();
+      });
+
+      console.log("1111111");
+      return initialState;
+    } catch (error) {
+      console.log("error deleting the user", error);
+    }
+  }
+);
+
 // guestLogin
 export const logout = createAsyncThunk("me/logout", async () => {
   try {
@@ -98,10 +117,6 @@ export const meSlice = createSlice({
     // },
   },
   extraReducers: {
-    [setMe.pending as any]: (state, action) => {
-      // TODO
-      console.log("pending state", state);
-    },
     [setMe.fulfilled as any]: (state, action) => {
       return action.payload; // return to set state
     },
@@ -112,9 +127,9 @@ export const meSlice = createSlice({
       return action.payload; // return to set state
     },
 
-    [setMe.rejected as any]: (state, action) => {
-      // TODO
-      console.log("rejected state", state);
+    [deleteUser.fulfilled as any]: (state, action) => {
+      console.log("payloaddddd", action.payload);
+      return action.payload; // return to set state
     },
   },
 });

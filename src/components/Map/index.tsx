@@ -4,11 +4,19 @@ import {
   requestForegroundPermissionsAsync,
 } from "expo-location";
 import { collection } from "firebase/firestore";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { View } from "react-native";
-import MapView, { Marker, Region } from "react-native-maps";
+import MapView, {
+  Marker,
+  AnimatedRegion,
+  Region,
+  Animated,
+  MarkerAnimated,
+} from "react-native-maps";
+
 import { useDispatch, useSelector } from "react-redux";
 import MePin from "../../../assets/svg/me_pin.svg";
+import MeWithDirectionPin from "../../../assets/svg/me_with_direction_pin.svg";
 import PersonPin from "../../../assets/svg/person_pin.svg";
 import ShopPin from "../../../assets/svg/shop_pin.svg";
 import {
@@ -19,6 +27,7 @@ import {
   POLL_INTERVAL,
 } from "../../constants";
 import { auth, firestore } from "../../firebase/client";
+import { usePrevPropValue } from "../../hooks/usePrevPropValue";
 import tw from "../../lib/tailwind";
 import { updateSelectedShop } from "../../redux/slices/selectedShopReducer";
 import { updateUsers } from "../../redux/slices/usersReducer";
@@ -36,7 +45,8 @@ const initialRegion: Region = {
 };
 
 const Map = () => {
-  const [pin, setPin] = useState<Pin>({
+  const currentUser = useSelector((state: RootState) => state.me);
+  const [myPin, setMyPin] = useState<Pin>({
     latitude: CALIFORNIA_LATITUDE,
     longitude: CALIFORNIA_LONGITUDE,
   });
@@ -79,17 +89,39 @@ const Map = () => {
     text = JSON.stringify(region);
   }
 
+  const markerRef = useRef<MarkerAnimated>(null);
+  const prevMePin = usePrevPropValue(myPin);
+
+  console.log("prevMePin", prevMePin);
+
   const getMyLocation = async () => {
     const location = await getCurrentPositionAsync();
+    console.log("llive location", location);
 
-    const { latitude, longitude } = location.coords;
-    const myPin = { latitude, longitude };
+    const { latitude, longitude, heading } = location.coords;
+    const myPin: Pin = {
+      latitude,
+      longitude,
+      ...(heading && { heading }),
+    };
     return myPin;
   };
 
   const getPinType = (user: User) => {
     if (user.uid === auth.currentUser?.uid)
-      return <MePin width={120} height={40} />;
+      return (
+        <MeWithDirectionPin
+          width={200}
+          height={100}
+          // style={{
+          //   transform: [
+          //     {
+          //       rotate: `${myPin.heading}deg`,
+          //     },
+          //   ],
+          // }}
+        />
+      );
 
     if (user.isSeller) return <ShopPin width={120} height={40} />;
 
@@ -97,12 +129,25 @@ const Map = () => {
   };
 
   const renderMarker = (user: User, index: number) => (
-    <Marker
+    <MarkerAnimated
       key={index}
+      ref={user.uid === currentUser.uid ? markerRef : undefined}
       coordinate={{
         latitude: user?.pin.latitude,
         longitude: user?.pin.longitude,
       }}
+      // only rotate my current pin
+      style={
+        user.uid === auth.currentUser?.uid && {
+          transform: [
+            {
+              rotate: `${myPin.heading}deg`,
+            },
+          ],
+        }
+      }
+      // rotation={130}
+      flat={true}
       // title={user.shop.title}
       // description={user.shop.description}
       pinColor={"green"}
@@ -111,7 +156,7 @@ const Map = () => {
       }}
     >
       {getPinType(user)}
-    </Marker>
+    </MarkerAnimated>
   );
   // request permission
   useEffect(() => {
@@ -128,12 +173,12 @@ const Map = () => {
     })();
   }, [requestForegroundPermissionsAsync]);
 
-  // get and set live location
+  // get and update my live location
   useEffect(() => {
     const interval = setInterval(async () => {
       try {
-        const myPin = await getMyLocation();
-        setPin(myPin);
+        const myNextPin = await getMyLocation();
+        setMyPin(myNextPin);
 
         // update to firestore
         const userDocRef = doc(
