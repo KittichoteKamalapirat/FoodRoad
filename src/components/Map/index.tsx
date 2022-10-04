@@ -84,7 +84,6 @@ const Map = () => {
 
   const getMyLocation = async () => {
     const location = await getCurrentPositionAsync();
-    console.log("llive location", location);
 
     const { latitude, longitude, heading } = location.coords;
     const myPin: Pin = {

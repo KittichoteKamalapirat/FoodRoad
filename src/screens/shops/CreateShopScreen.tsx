@@ -61,15 +61,14 @@ const CreateShopScreen = ({ navigation }: Props) => {
     try {
       await uploadBytes(storageRef, blob);
       const downloadUrl = await getDownloadURL(storageRef);
-      console.log("---------download url-----------", downloadUrl);
+      setIsUploading(false);
       return downloadUrl;
     } catch (error) {
       console.log("error uploading image", error.message);
       return ""; // TODO do something?
     }
-    setIsUploading(false);
   };
-  console.log("iamge", imageUrl);
+
   const {
     control,
     handleSubmit,

@@ -33,8 +33,6 @@ export const storage = getStorage(app);
 
 export const logout = () => {
   const response = signOut(auth);
-  console.log("response", response);
-  console.log("sign out");
 };
 
 export const openCustomerPortal = async () => {
@@ -63,30 +61,3 @@ export const fetchSubscription = async (uid: string) => {
 
   return null;
 };
-
-// // phone
-// export const sendSmsVerification = async (
-//   phoneNumber: string,
-//   recaptchaVerifier: ApplicationVerifier,
-//   setVerificationId: React.Dispatch<React.SetStateAction<string>>
-// ) => {
-//   const phoneProvider = new PhoneAuthProvider(auth);
-//   try {
-//     const verificationId = await phoneProvider.verifyPhoneNumber(
-//       formatphoneNumber(phoneNumber, "66"),
-//       recaptchaVerifier
-//     );
-//     setVerificationId(verificationId);
-
-//   } catch (error) {
-//     console.log("error when sending sms verification code");
-//   }
-// };
-
-// export const confirmSmsCode = (verificationId: string, code: string) => {
-//   const credential = PhoneAuthProvider.credential(verificationId, code);
-//   signInWithCredential(auth, credential).then((result) => {
-//     // Do something with the results here
-//     console.log(result);
-//   });
-// };

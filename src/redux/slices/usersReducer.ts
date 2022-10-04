@@ -61,20 +61,6 @@ export const usersSlice = createSlice({
       });
     },
   },
-  // extraReducers: {
-  //   [createShop.pending as any]: (state, action) => {
-  //     // TODO
-  //     console.log("pending state", state);
-  //   },
-  //   [createShop.fulfilled as any]: (state, action) => {
-  //     // TODO
-  //     console.log("fulfileed state", state);
-  //   },
-  //   [createShop.rejected as any]: (state, action) => {
-  //     // TODO
-  //     console.log("rejected state", state);
-  //   },
-  // },
 });
 
 export const { updateUsers, updateUser } = usersSlice.actions; // action creators are generated for each case in reducer function

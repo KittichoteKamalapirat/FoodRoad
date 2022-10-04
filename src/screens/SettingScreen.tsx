@@ -35,7 +35,6 @@ const SettingScreen = ({ navigation }: Props) => {
     try {
       if (!auth.currentUser) return;
       const result = dispatch(deleteUser(auth.currentUser.uid) as any);
-      console.log("result xxx", result);
 
       if (result) {
         alert("User successfully delete");
@@ -57,14 +56,12 @@ const SettingScreen = ({ navigation }: Props) => {
 
   const handleGuestLogin = () => {
     try {
-      console.log("handle guest login");
       dispatch(guestLogin() as any);
     } catch (error) {
       console.log("guest login error", error.message);
     }
   };
 
-  console.log("current user", currentUser);
   const loggedInBody = (
     <View>
       <View style={tw`bg-bg-color`}>

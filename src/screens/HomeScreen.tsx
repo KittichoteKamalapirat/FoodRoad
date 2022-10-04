@@ -17,7 +17,6 @@ const HomeScreen = ({ navigation }: Props) => {
   const user = auth.currentUser?.phoneNumber;
 
   const me = useSelector((state: RootState) => state.me);
-  console.log("meeeeee", me);
 
   return (
     <ScreenLayout>

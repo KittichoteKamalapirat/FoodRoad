@@ -55,11 +55,7 @@ export const setMe = createAsyncThunk(
 // guestLogin
 export const guestLogin = createAsyncThunk("me/guestLogin", async () => {
   try {
-    console.log("1");
     const result = await signInAnonymously(auth);
-    console.log("2");
-
-    console.log("result", result);
 
     const { uid, phoneNumber, photoURL } = result.user;
 
@@ -91,7 +87,6 @@ export const deleteUser = createAsyncThunk(
         auth.currentUser?.delete();
       });
 
-      console.log("1111111");
       return initialState;
     } catch (error) {
       console.log("error deleting the user", error);
@@ -128,7 +123,6 @@ export const meSlice = createSlice({
     },
 
     [deleteUser.fulfilled as any]: (state, action) => {
-      console.log("payloaddddd", action.payload);
       return action.payload; // return to set state
     },
   },
