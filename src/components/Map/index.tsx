@@ -40,7 +40,6 @@ const Map = () => {
   const users = useSelector((state: RootState) => state.users);
   const dispatch = useDispatch();
 
-  console.log("users", users);
   const [myPin, setMyPin] = useState<Pin>({
     latitude: CALIFORNIA_LATITUDE,
     longitude: CALIFORNIA_LONGITUDE,

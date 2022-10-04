@@ -2,7 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationScreenProp } from "react-navigation";
-import { bgColor, primaryTextColor } from "../../theme";
+import { bgColor, grey900, primaryTextColor } from "../../theme";
 import { ButtonTypes } from "../components/Buttons/Button";
 import IconButton from "../components/Buttons/IconButton";
 import HomeScreen from "../screens/HomeScreen";
@@ -54,6 +54,13 @@ const HomeStackScreen = () => {
         component={ShopScreen}
         options={({ route }) => ({
           title: route.params?.name,
+          headerLeft: () => (
+            <IconButton
+              onPress={() => navigation.navigate("Setting")}
+              icon={<Ionicons name="chevron-back" size={24} color={grey900} />}
+              type={ButtonTypes.TEXT}
+            />
+          ),
         })}
       />
 

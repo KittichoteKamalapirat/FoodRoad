@@ -4,11 +4,11 @@ import {
   signInWithCredential,
 } from "@firebase/auth";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { deleteDoc, doc, setDoc } from "firebase/firestore";
+import { deleteDoc, doc, getDoc, setDoc } from "firebase/firestore";
 import { auth, firestore } from "../../firebase/client";
 import { User } from "../../types/User";
 
-const initialState: User | null = {
+const blankUser = {
   uid: "",
   photoURL: "",
   phoneNumber: "",
@@ -24,11 +24,13 @@ const initialState: User | null = {
     imgUrl: "",
   },
 };
+const initialState: User | null = null as User | null;
 
 // setMe
 export const setMe = createAsyncThunk(
   "me",
   async (credential: PhoneAuthCredential) => {
+    console.log("set meeeeeeeeee");
     try {
       const result = await signInWithCredential(auth, credential);
 
@@ -44,13 +46,27 @@ export const setMe = createAsyncThunk(
 
       const userRef = doc(firestore, "users", uid);
       // create user in firebase, redux update auth.currentUser automatically
-      await setDoc(userRef, newUser);
+      await setDoc(userRef, newUser, { merge: true });
       return newUser;
     } catch (error) {
       console.log("error login with phone number", error);
     }
   }
 );
+
+// setMe
+export const updateMe = createAsyncThunk("me", async (uid: string) => {
+  try {
+    const userRef = doc(firestore, "users", uid);
+
+    const userDocSnap = await getDoc(userRef);
+    const userDocData = userDocSnap.data();
+
+    return userDocData;
+  } catch (error) {
+    console.log("error login with phone number", error);
+  }
+});
 
 // guestLogin
 export const guestLogin = createAsyncThunk("me/guestLogin", async () => {
@@ -107,10 +123,7 @@ export const logout = createAsyncThunk("me/logout", async () => {
 export const meSlice = createSlice({
   name: "me",
   initialState,
-  reducers: {
-    //   return action.payload;
-    // },
-  },
+  reducers: {},
   extraReducers: {
     [setMe.fulfilled as any]: (state, action) => {
       return action.payload; // return to set state
@@ -118,6 +131,10 @@ export const meSlice = createSlice({
     [guestLogin.fulfilled as any]: (state, action) => {
       return action.payload; // return to set state
     },
+    [updateMe.fulfilled as any]: (state, action) => {
+      return action.payload; // return to set state
+    },
+
     [logout.fulfilled as any]: (state, action) => {
       return action.payload; // return to set state
     },

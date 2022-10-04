@@ -86,7 +86,6 @@ const Button = ({
   const buttonStyle = useButtonStyle({ type, fontColor, size, disabled });
   const textStyle = useTextStyle({ type, fontColor, size, disabled });
 
-  console.log("textStyle", textStyle);
   return (
     <TouchableOpacity style={tw`${buttonStyle}`} onPress={onPress}>
       <Text style={tw`${textStyle} ${size}`}>{label}</Text>

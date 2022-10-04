@@ -89,7 +89,10 @@ const CreateShopScreen = ({ navigation }: Props) => {
       dispatch(createShop(shop as any) as any); // TODO
 
       alert("Store successfully created");
-      navigation.navigate("Shop", { userId: auth.currentUser?.uid as string });
+      navigation.navigate("Shop", {
+        userId: auth.currentUser?.uid as string,
+        // prev: "Setting",
+      });
     } catch (error) {
       console.log("⛔ catch block", error);
     }

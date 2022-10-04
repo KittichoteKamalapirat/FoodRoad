@@ -1,4 +1,5 @@
 import React from "react";
+import { useEffect } from "react";
 import { Alert, View } from "react-native";
 import { NavigationScreenProp } from "react-navigation";
 import { useDispatch, useSelector } from "react-redux";
@@ -7,6 +8,7 @@ import { Container } from "../components/containers/Container";
 import ScreenLayout from "../components/layouts/ScreenLayout";
 import MyText from "../components/MyTexts/MyText";
 import { auth } from "../firebase/client";
+import useUpdateMe from "../hooks/useUpdateMe";
 import tw from "../lib/tailwind";
 import { deleteUser, guestLogin, logout } from "../redux/slices/meReducer";
 import { RootState } from "../redux/store";
@@ -17,7 +19,17 @@ interface Props {
 
 const SettingScreen = ({ navigation }: Props) => {
   const dispatch = useDispatch();
+  useUpdateMe();
   const currentUser = useSelector((state: RootState) => state.me);
+
+  console.log(
+    "----------------currentUser redux-----------------",
+    currentUser
+  );
+  console.log(
+    "----------------currentUser firebase-----------------",
+    auth.currentUser?.uid
+  );
   const createTwoButtonAlert = () =>
     Alert.alert("Are you sure?", "This action cannot be undone", [
       {
@@ -72,10 +84,10 @@ const SettingScreen = ({ navigation }: Props) => {
             source={{ uri: "xxx" }}
           /> */}
           <View>
-            {currentUser.isGuest ? (
+            {currentUser?.isGuest ? (
               <MyText>Account info: I am a guest</MyText>
             ) : (
-              <MyText>Phone Number: {currentUser.phoneNumber}</MyText>
+              <MyText>Phone Number: {currentUser?.phoneNumber}</MyText>
             )}
 
             {/* <MyText fontColor="text-grey-300">
@@ -97,20 +109,7 @@ const SettingScreen = ({ navigation }: Props) => {
         </View>
       </View>
 
-      <View style={tw`mt-4`}>
-        <Button
-          label="Create Shop"
-          onPress={() => {
-            if (currentUser.isGuest)
-              return alert("Please sign in to create a shop");
-            navigation.navigate("CreateShop");
-          }}
-          type={ButtonTypes.TEXT}
-          disabled={currentUser.isGuest}
-        />
-      </View>
-
-      {currentUser.shop && (
+      {currentUser && currentUser.shop ? (
         <View style={tw`mt-4`}>
           <Button
             label="My Shop"
@@ -120,6 +119,19 @@ const SettingScreen = ({ navigation }: Props) => {
               })
             }
             type={ButtonTypes.TEXT}
+          />
+        </View>
+      ) : (
+        <View style={tw`mt-4`}>
+          <Button
+            label="Create Shop"
+            onPress={() => {
+              if (currentUser && currentUser.isGuest)
+                return alert("Please sign in to create a shop");
+              navigation.navigate("CreateShop");
+            }}
+            type={ButtonTypes.TEXT}
+            disabled={currentUser?.isGuest}
           />
         </View>
       )}
@@ -143,7 +155,7 @@ const SettingScreen = ({ navigation }: Props) => {
     <ScreenLayout justifyContent="justify-start">
       <Container>
         <View>
-          {currentUser.uid ? (
+          {currentUser?.uid ? (
             loggedInBody
           ) : (
             <>

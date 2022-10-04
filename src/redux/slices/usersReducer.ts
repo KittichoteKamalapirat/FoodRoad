@@ -24,7 +24,7 @@ export const createShop = createAsyncThunk(
         auth.currentUser?.uid as string
       );
 
-      setDoc(userDocRef, { shop }, { merge: true });
+      setDoc(userDocRef, { shop, isSeller: true }, { merge: true });
 
       const userDocSnap = await getDoc(userDocRef);
 
