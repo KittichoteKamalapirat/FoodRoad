@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "foodroad",
-    "slug": "foodroad",
+    "name": "rodken",
+    "slug": "rodken",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -14,9 +14,12 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.kittishane.rodken"
     },
     "android": {
       "adaptiveIcon": {
@@ -28,7 +31,10 @@
       "favicon": "./assets/favicon.png"
     },
     "packagerOpts": {
-      "sourceExts": ["cjs", "idb"]
+      "sourceExts": [
+        "cjs",
+        "idb"
+      ]
     },
     "extra": {
       "eas": {
@@ -38,7 +44,8 @@
         "FIREBASE_STORAGE_BUCKET": "foodroad-d75fa.appspot.com",
         "FIREBASE_MESSAGING_SENDER_ID": "159547225170",
         "FIREBASE_APP_ID": "1:159547225170:web:ff340b40419fc744e41b8b",
-        "FIREBASE_MEASUREMENT_ID": "G-W8264TE30X"
+        "FIREBASE_MEASUREMENT_ID": "G-W8264TE30X",
+        "projectId": "5c02793f-d096-4988-89a3-576edcb4e1bd"
       }
     }
   }

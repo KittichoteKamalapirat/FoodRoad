@@ -11,7 +11,12 @@ import MyText from "./MyTexts/MyText";
 const ShopFooter = () => {
   const shop = useSelector((state: RootState) => state.selectedShop);
 
-  if (shop.name === "") return <MyText>Select a shop</MyText>; // blank
+  if (shop.name === "")
+    return (
+      <Container>
+        <MyText>Select a shop</MyText>
+      </Container>
+    );
   return (
     <ScreenLayout>
       <Container>
