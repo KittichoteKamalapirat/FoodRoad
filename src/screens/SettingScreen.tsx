@@ -65,7 +65,7 @@ const SettingScreen = ({ navigation }: Props) => {
   const loggedInBody = (
     <View>
       <View style={tw`bg-bg-color`}>
-        <View style={tw`flex-row items-center m-2`}>
+        <View style={tw`flex-row items-center my-2`}>
           {/* <Image
             style={tw`w-20 h-20 rounded-full bg-grey-500 mr-2`}
             // source={{ uri: currentUser?.avatar }}
@@ -73,7 +73,7 @@ const SettingScreen = ({ navigation }: Props) => {
           /> */}
           <View>
             {currentUser.isGuest ? (
-              <MyText>I am a guest</MyText>
+              <MyText>Account info: I am a guest</MyText>
             ) : (
               <MyText>Phone Number: {currentUser.phoneNumber}</MyText>
             )}
@@ -96,28 +96,36 @@ const SettingScreen = ({ navigation }: Props) => {
           </View>
         </View>
       </View>
-      <View style={tw`mt-4`}>
-        <Button label="Logout" onPress={handleLogout} type={ButtonTypes.TEXT} />
-      </View>
 
       <View style={tw`mt-4`}>
         <Button
           label="Create Shop"
-          onPress={() => navigation.navigate("CreateShop")}
+          onPress={() => {
+            if (currentUser.isGuest)
+              return alert("Please sign in to create a shop");
+            navigation.navigate("CreateShop");
+          }}
           type={ButtonTypes.TEXT}
+          disabled={currentUser.isGuest}
         />
       </View>
 
+      {currentUser.shop && (
+        <View style={tw`mt-4`}>
+          <Button
+            label="My Shop"
+            onPress={() =>
+              navigation.navigate("Shop", {
+                userId: auth.currentUser?.uid as string,
+              })
+            }
+            type={ButtonTypes.TEXT}
+          />
+        </View>
+      )}
+
       <View style={tw`mt-4`}>
-        <Button
-          label="My Shop"
-          onPress={() =>
-            navigation.navigate("Shop", {
-              userId: auth.currentUser?.uid as string,
-            })
-          }
-          type={ButtonTypes.TEXT}
-        />
+        <Button label="Logout" onPress={handleLogout} type={ButtonTypes.TEXT} />
       </View>
 
       <View style={tw`mt-4`}>

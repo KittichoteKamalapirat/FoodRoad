@@ -37,7 +37,7 @@ export const monoFamily = ["Nunito", "Montserrat", "Arial", "sans-serif"];
 // font size
 export const fontSizeXS = "8px";
 export const fontSizeSM = "10px";
-export const fontSizeMD = "12px";
+export const fontSizeMD = "14px";
 export const fontSizeLG = "16px";
 export const fontSizeXL = "20px";
 export const fontSize2XL = "24px";

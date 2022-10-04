@@ -40,6 +40,7 @@ const Map = () => {
   const users = useSelector((state: RootState) => state.users);
   const dispatch = useDispatch();
 
+  console.log("users", users);
   const [myPin, setMyPin] = useState<Pin>({
     latitude: CALIFORNIA_LATITUDE,
     longitude: CALIFORNIA_LONGITUDE,
@@ -122,8 +123,8 @@ const Map = () => {
       }
       // rotation={130}
       flat={true}
-      // title={user.shop.title}
-      // description={user.shop.description}
+      title={user.shop?.name}
+      description={user.shop?.description}
       pinColor={"green"}
       onPress={() => {
         dispatch(updateSelectedShop(user.shop));
@@ -169,26 +170,22 @@ const Map = () => {
     return () => clearInterval(interval);
   }, [auth.currentUser, region.latitude, region.longitude]);
 
-  // listen to data change in firestore
+  // listen to data changes in firestore
   useEffect(() => {
-    if (auth.currentUser) {
-      const colRef = collection(firestore, "users");
+    const colRef = collection(firestore, "users");
 
-      // Create the DB listener
-      const unsuscribe = onSnapshot(colRef, (snapshot) => {
-        const users = snapshot.docs.map((doc) => {
-          // const pinDocRef = doc(doc, "pin", "pin_uid");
-
-          return doc.data();
-        });
-        dispatch(updateUsers(users));
+    // Create the DB listener
+    const unsuscribe = onSnapshot(colRef, (snapshot) => {
+      const users = snapshot.docs.map((doc) => {
+        return doc.data();
       });
+      dispatch(updateUsers(users));
+    });
 
-      return () => {
-        unsuscribe();
-      };
-    }
-  }, [dispatch, updateUsers, auth.currentUser]);
+    return () => {
+      unsuscribe();
+    };
+  }, [dispatch, updateUsers]);
 
   return (
     <View style={tw`flex-1 bg-grey-0 items-center justify-center`}>

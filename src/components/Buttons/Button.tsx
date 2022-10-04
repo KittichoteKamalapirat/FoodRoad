@@ -15,16 +15,18 @@ interface Props {
   type?: ButtonTypes;
   fontColor?: string; // TODO => change to color since border also changes, not only font
   size?: string;
+  disabled?: boolean;
 }
 
 interface ClassProps {
   type: ButtonTypes;
   fontColor: string;
   size: string;
+  disabled: boolean;
 }
 
-const useButtonStyle = ({ type, fontColor }: ClassProps) => {
-  const commonStyle = "rounded-full mt-2";
+const useButtonStyle = ({ type, fontColor, disabled }: ClassProps) => {
+  const commonStyle = `rounded-full mt-2  ${disabled && "opacity-50"}`;
   switch (type) {
     case ButtonTypes.OUTLINED:
       return `${commonStyle} border-solid border-1 ${
@@ -43,7 +45,7 @@ const useButtonStyle = ({ type, fontColor }: ClassProps) => {
   }
 };
 
-const useTextStyle = ({ type, fontColor, size }: ClassProps) => {
+const useTextStyle = ({ type, fontColor, size, disabled }: ClassProps) => {
   const sizeStyle = (() => {
     switch (size) {
       case "text-sm":
@@ -53,7 +55,7 @@ const useTextStyle = ({ type, fontColor, size }: ClassProps) => {
     }
   })();
 
-  const commonStyle = `${sizeStyle} text-center`;
+  const commonStyle = `${sizeStyle} text-center ${disabled && "opacity-30"}`;
 
   switch (type) {
     case ButtonTypes.OUTLINED:
@@ -65,7 +67,7 @@ const useTextStyle = ({ type, fontColor, size }: ClassProps) => {
       return `${commonStyle} text-bg-color`;
 
     case ButtonTypes.TEXT:
-      return ` ${fontColor || "text-text-primary"} `;
+      return `${disabled && "opacity-30"} ${fontColor || "text-text-primary"} `;
 
     case ButtonTypes.PRIMARY:
     default:
@@ -79,10 +81,12 @@ const Button = ({
   onPress,
   fontColor = "",
   size = "",
+  disabled = false,
 }: Props) => {
-  const buttonStyle = useButtonStyle({ type, fontColor, size });
-  const textStyle = useTextStyle({ type, fontColor, size });
+  const buttonStyle = useButtonStyle({ type, fontColor, size, disabled });
+  const textStyle = useTextStyle({ type, fontColor, size, disabled });
 
+  console.log("textStyle", textStyle);
   return (
     <TouchableOpacity style={tw`${buttonStyle}`} onPress={onPress}>
       <Text style={tw`${textStyle} ${size}`}>{label}</Text>

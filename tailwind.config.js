@@ -32,7 +32,7 @@ const monoFamily = ["Montserrat", "Arial", "sans-serif"];
 // font size
 const fontSizeXS = "8px";
 const fontSizeSM = "10px";
-const fontSizeMD = "12px";
+const fontSizeMD = "14px";
 const fontSizeLG = "16px";
 const fontSizeXL = "20px";
 const fontSize2XL = "24px";
