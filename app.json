@@ -2,7 +2,7 @@
   "expo": {
     "name": "rodken",
     "slug": "rodken",
-    "version": "1.0.0",
+    "version": "1.0.2",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -14,9 +14,7 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.kittishane.rodken"
@@ -25,17 +23,23 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.kittishane.rodken"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "packagerOpts": {
-      "sourceExts": [
-        "cjs",
-        "idb"
-      ]
+      "sourceExts": ["cjs", "idb"]
     },
+    "plugins": [
+      [
+        "expo-tracking-transparency",
+        {
+          "userTrackingPermission": "This identifier will be used to deliver personalized ads to you."
+        }
+      ]
+    ],
     "extra": {
       "eas": {
         "FIREBASE_API_KEY": "AIzaSyBrPMXdAw92A_vzV1VJ37iDDg4oTy1I4RI",

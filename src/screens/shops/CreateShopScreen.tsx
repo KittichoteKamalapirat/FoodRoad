@@ -84,7 +84,7 @@ const CreateShopScreen = ({ navigation }: Props) => {
     try {
       const { name, description } = data;
 
-      const downloadUrl = await uploadImage();
+      const downloadUrl = imageUrl ? await uploadImage() : "";
       const shop: Shop = { name, description, imgUrl: downloadUrl };
       dispatch(createShop(shop as any) as any); // TODO
 

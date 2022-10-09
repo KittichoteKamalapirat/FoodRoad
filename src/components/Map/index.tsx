@@ -3,6 +3,7 @@ import {
   getCurrentPositionAsync,
   requestForegroundPermissionsAsync,
 } from "expo-location";
+import { requestTrackingPermissionsAsync } from "expo-tracking-transparency";
 import { collection } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { View } from "react-native";
@@ -39,6 +40,8 @@ const Map = () => {
   const currentUser = useSelector((state: RootState) => state.me);
   const users = useSelector((state: RootState) => state.users);
   const dispatch = useDispatch();
+
+  // const [status, requestPermission] = useTrackingPermissions();
 
   const [myPin, setMyPin] = useState<Pin>({
     latitude: CALIFORNIA_LATITUDE,
@@ -122,8 +125,8 @@ const Map = () => {
       }
       // rotation={130}
       flat={true}
-      title={user.shop?.name}
-      description={user.shop?.description}
+      // title={user.shop?.name}
+      // description={user.shop?.description}
       pinColor={"green"}
       onPress={() => {
         dispatch(updateSelectedShop(user.shop));
@@ -146,6 +149,16 @@ const Map = () => {
       }
     })();
   }, [requestForegroundPermissionsAsync]);
+
+  useEffect(() => {
+    (async () => {
+      const { status } = await requestTrackingPermissionsAsync();
+      if (status !== "granted") {
+        setErrorMsg("Permission to track activity across apps was denied");
+        return;
+      }
+    })();
+  }, []);
 
   // get and update my live location
   useEffect(() => {

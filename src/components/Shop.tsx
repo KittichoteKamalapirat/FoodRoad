@@ -1,7 +1,5 @@
 import { RouteProp, useRoute } from "@react-navigation/native";
-import React, { useRef } from "react";
-import { useEffect } from "react";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Image, View } from "react-native";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
@@ -24,15 +22,15 @@ const Shop = () => {
 
   const { name, description, imgUrl } = seller?.shop || {};
 
-  const imgRef = useRef<Image>(null);
+  console.log("-------------ratio--------------", imgAspectRatio);
 
   useEffect(() => {
     if (imgUrl)
       Image.getSize(imgUrl, (width, height) => {
-        setImgAspectRatio((width / height) * 100);
+        console.log("width", width);
+        console.log("height", height);
+        setImgAspectRatio((height / width) * 100);
       });
-
-    // console.log("imgRef", imgRef?.current.naturalWidth);
   }, []);
 
   return (
@@ -46,7 +44,7 @@ const Shop = () => {
 
           <Image
             source={{ uri: imgUrl }}
-            style={{ width: "100%", paddingBottom: imgAspectRatio }}
+            style={{ width: "100%", paddingBottom: `${imgAspectRatio}%` }}
           />
         </View>
       </Container>
